@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>El Vuelo del Copetón · Cubatura Adaptativa 2D en Bogotá (RMCAB)</title>
+
+  <!-- Estilos Modulares del Mundo 2D, Ventanas Flotantes y Simulador -->
+  <link rel="stylesheet" href="css/world_style.css">
+  <link rel="stylesheet" href="css/modals_style.css">
+  <link rel="stylesheet" href="css/simulator.css">
+
+  <!-- Configuración de MathJax para Fórmulas LaTeX -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+  <!-- ========================================================================
+       1. PANTALLA PRINCIPAL: "TOCA PARA COMENZAR"
+       ======================================================================== -->
+  <div id="start-screen">
+    <div class="start-card">
+      <div class="copeton-hero-badge">
+        <span>🐦</span>
+        <span>EXPERIENCIA INTERACTIVA 2D · EL VUELO DE RUFINO EL COPETÓN</span>
+      </div>
+
+      <h1 class="start-title">
+        Integración Espacial de Contaminantes Atmosféricos ($\text{PM}_{10}$) en Bogotá mediante Cubatura Adaptativa sobre Datos Dispersos
+      </h1>
+      <p class="start-subtitle">
+        Un recorrido aéreo desde los bosques y humedales de la Sabana hasta el corazón urbano de Bogotá y el Simulador en Vivo
+      </p>
+
+      <div class="start-meta-grid">
+        <div class="start-meta-item">
+          <strong>Autores (Ingeniería de Sistemas)</strong>
+          Santiago Sandoval Cortés · Miguel David Moreno Lozano · Luis Alejandro Camacho Benítez
+        </div>
+        <div class="start-meta-item">
+          <strong>Asignatura y Docente</strong>
+          Métodos Numéricos (2026-1) · Prof. Edwin Fernando Muñoz Chipatecua
+        </div>
+        <div class="start-meta-item">
+          <strong>Artículo Científico Base</strong>
+          Cavoretto, De Rossi &amp; Erb (2024) — <em>Numerical cubature on scattered data by adaptive interpolation</em>
+        </div>
+        <div class="start-meta-item">
+          <strong>Datos Oficiales y Dominio</strong>
+          Red RMCAB Bogotá ($N = 19$ estaciones) · $\operatorname{Area}(\Omega_{\text{Bog}}) = 252.37\,\text{km}^2$
+        </div>
+      </div>
+
+      <button id="btn-start-journey" class="start-btn">
+        <span>🕊️</span>
+        <span>TOCA PARA COMENZAR EL VUELO</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       2. HUD SUPERIOR E INFERIOR Y LIENZO DEL MUNDO 2D EN LOOP
+       ======================================================================== -->
+  <header id="flight-hud-top">
+    <div class="hud-copeton-status">
+      <div class="copeton-avatar-circle" title="Rufino el Copetón Bogotano">🐦</div>
+      <div class="zone-indicator-box">
+        <span class="zone-label">Posición de Vuelo Actual</span>
+        <span id="hud-current-zone">🌿 Humedal de Guaymaral (Bosque Nativo)</span>
+      </div>
+    </div>
+
+    <!-- Botones de las 8 paradas para vuelo directo -->
+    <nav id="hud-waypoints" class="flight-waypoints"></nav>
+
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <div class="air-sensor-pill">
+        <span style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted);">PM₁₀ LOCAL:</span>
+        <span id="hud-air-pm" class="air-pm-val">18.2 µg/m³</span>
+      </div>
+      <button id="btn-open-intro" class="waypoint-btn" title="Ver Guía del Viaje y Personaje">
+        📖 Guía
+      </button>
+    </div>
+  </header>
+
+  <div id="toast-bubble"></div>
+
+  <!-- Mini Ventana Explicativa al pasar el cursor sobre obstáculos aéreos -->
+  <div id="obstacle-tooltip">
+    <div class="obs-tip-header">
+      <div id="obs-tip-title" class="obs-tip-title">🌪️ Obstáculo</div>
+      <span id="obs-tip-badge" class="obs-tip-badge">Alerta</span>
+    </div>
+    <div class="obs-tip-body">
+      <div class="obs-tip-row">
+        <strong>¿Qué significa?</strong>
+        <span id="obs-tip-meaning">Descripción breve y sencilla.</span>
+      </div>
+      <div class="obs-tip-row">
+        <strong>¿Por qué está aquí en Bogotá?</strong>
+        <span id="obs-tip-why">Contexto ambiental o numérico.</span>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="game-Canvas"></canvas>
+
+  <footer id="flight-hud-bottom">
+    <div>
+      <span class="key-badge">←</span><span class="key-badge">→</span><span class="key-badge">↑</span><span class="key-badge">↓</span> o <span class="key-badge">WASD</span> Volar con el Copetón
+    </div>
+    <div>
+      <span class="key-badge">ESPACIO</span> o <span class="key-badge">CLIC</span> Hablar con Amigos / Abrir Estructura o Simulador
+    </div>
+    <div>
+      <span class="key-badge">ESC</span> Cerrar Ventana Flotante
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       3. VENTANA FLOTANTE DE INTRODUCCIÓN (ANTES DE CONTROLAR AL COPETÓN)
+       ======================================================================== -->
+  <div id="intro-modal-backdrop" class="modal-backdrop">
+    <div class="floating-modal" style="max-width: 1020px;">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <div class="modal-npc-avatar">🐦</div>
+          <div class="modal-title-group">
+            <span class="modal-zone-tag">Briefing de Vuelo · Introducción al Personaje y al Problema</span>
+            <h2 class="modal-title">¡Hola! Soy Rufino, el Copetón de la Sabana de Bogotá (<em>Zonotrichia capensis</em>)</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div class="copeton-dialog-banner">
+          <span style="font-size: 1.8rem;">🌿</span>
+          <div>
+            <strong>¿Quién es Rufino y qué problema enfrentamos?</strong><br>
+            Como ave emblema de los parques, jardines y humedales de Bogotá, todos los días vuelo desde el bosque limpio del norte ($18.2\,\mu\text{g}/\text{m}^3$ de $\text{PM}_{10}$) hasta las zonas industriales del suroccidente ($62.4\,\mu\text{g}/\text{m}^3$). La ciudad solo cuenta con <strong>$N = 19$ estaciones dispersas</strong> de la red RMCAB para vigilar $252.37\,\text{km}^2$. Si calculamos un promedio simple ($33.50\,\mu\text{g}/\text{m}^3$), sesgamos el diagnóstico ambiental. ¡Acompáñame a resolverlo con <strong>Cubatura Adaptativa 2D</strong>!
+          </div>
+        </div>
+
+        <h3 style="font-family: var(--font-title); color: var(--green-deep); font-size: 1.02rem; margin-bottom: 6px;">
+          🗺️ Resumen del Viaje Aéreo que Realizaremos (8 Paradas Interactivas + Obstáculos):
+        </h3>
+
+        <div class="intro-journey-grid">
+          <div class="journey-step-card">
+            <strong>🦉 1. Humedal (Bosque)</strong>
+            El problema de las 19 estaciones RMCAB y por qué falla el promedio simple ($33.50\,\mu\text{g}/\text{m}^3$).
+          </div>
+          <div class="journey-step-card">
+            <strong>🏛️ 2. Jardín Botánico</strong>
+            El artículo base de <em>Cavoretto, De Rossi &amp; Erb (2024)</em>, la cota teórica y el <em>Error Stalling</em>.
+          </div>
+          <div class="journey-step-card">
+            <strong>🚠 3. Cerros Orientales</strong>
+            Proyección métrica en $\text{km}$, malla de Delaunay ($252.37\,\text{km}^2$) y densidad vertical ($\text{g}/\text{m}$).
+          </div>
+          <div class="journey-step-card">
+            <strong>🐦 4. Lab. Chapinero</strong>
+            Duelo de estabilidad en IEEE-754: QR de Householder vs. colapso de LU ($\kappa_2 = 8.79\times 10^{20}$).
+          </div>
+          <div class="journey-step-card">
+            <strong>🎈 5. Globo Teusaquillo</strong>
+            Benchmark de Franke, orden empírico $p_k \approx 5.7$ y demostración del estancamiento ($p_k \to 0$).
+          </div>
+          <div class="journey-step-card" style="border-color: #D97706; background: #FFFBEB;">
+            <strong>🛰️ 6. Torre Carvajal (Ciudad)</strong>
+            <strong>Simulador Interactivo en Vivo:</strong> malla adaptativa de $28$ a $205$ celdas sobre Bogotá.
+          </div>
+          <div class="journey-step-card">
+            <strong>🦆 7. Parque Metropolitano</strong>
+            Validación contra SciPy ($2.13\times 10^{-13}$), análisis de sensibilidad, conclusiones y futuro.
+          </div>
+          <div class="journey-step-card" style="border-color: var(--green-forest); background: #ECFDF5;">
+            <strong>🪺 8. El Gran Nido Final</strong>
+            Llegada al árbol de aliso en flor con el mensaje de cierre y despedida de la presentación.
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <span>💡 <strong>Cómo interactuar:</strong> Vuela con las flechas / WASD (o clic en la barra superior). Presiona <strong>ESPACIO</strong> cerca de cada estructura y <strong>pasa el cursor sobre los obstáculos del aire</strong> para ver qué significan.</span>
+        <button id="btn-begin-flight" class="modal-action-btn">
+          🕊️ ¡Despegar con Rufino Ahora! (ESPACIO)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       4. VENTANA FLOTANTE PARA LAS PARADAS ACADÉMICAS (1..5, 7 y 8 NIDO)
+       ======================================================================== -->
+  <div id="station-modal-backdrop" class="modal-backdrop">
+    <div class="floating-modal">
+      <div id="station-modal-header" class="modal-header">
+        <div class="modal-header-left">
+          <div id="station-modal-avatar" class="modal-npc-avatar">🦉</div>
+          <div class="modal-title-group">
+            <span id="station-modal-zone" class="modal-zone-tag">Zona</span>
+            <h2 id="station-modal-title" class="modal-title">Título de la Parada</h2>
+          </div>
+        </div>
+        <button id="btn-close-station-modal" class="modal-close-btn">
+          ✕ Volver al Vuelo (ESPACIO / ESC)
+        </button>
+      </div>
+
+      <div id="station-modal-body" class="modal-body"></div>
+
+      <div class="modal-footer">
+        <span>Presiona <strong>ESPACIO</strong> o <strong>ESC</strong> para cerrar esta ventana y seguir volando con Rufino.</span>
+        <div class="modal-nav-btns">
+          <button id="btn-modal-prev-stop" class="modal-action-btn secondary">◀ Parada Anterior</button>
+          <button id="btn-modal-continue-flight" class="modal-action-btn secondary">🕊️ Seguir Volando</button>
+          <button id="btn-modal-next-stop" class="modal-action-btn">Siguiente Parada ▶</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       5. VENTANA FLOTANTE DEL SIMULADOR INTERACTIVO EN VIVO (PARADA 6)
+       ======================================================================== -->
+  <div id="simulator-modal-backdrop" class="modal-backdrop">
+    <div class="floating-modal" style="width: min(1320px, 96vw); height: 89vh;">
+      <div class="modal-header urban-theme">
+        <div class="modal-header-left">
+          <div class="modal-npc-avatar">🛰️</div>
+          <div class="modal-title-group">
+            <span class="modal-zone-tag">Parada 6 · Corazón Urbano e Industrial de Bogotá (Carvajal - Kennedy · 62.4 µg/m³)</span>
+            <h2 class="modal-title">Simulador en Vivo: Cubatura Adaptativa 2D y Masa Total de $\text{PM}_{10}$</h2>
+          </div>
+        </div>
+        <button id="btn-close-sim-modal" class="modal-close-btn">
+          ✕ Volver al Vuelo (ESPACIO / ESC)
+        </button>
+      </div>
+
+      <div class="modal-body" style="display: flex; flex-direction: column; overflow: hidden; padding: 16px 20px;">
+        <div class="simulator-container" style="flex: 1;">
+          <!-- Columna 1: Controles del Algoritmo -->
+          <div class="sim-controls-panel">
+            <div class="sim-control-group">
+              <div class="sim-control-label">
+                <span>1. Reconstrucción Espacial (Fase 1)</span>
+              </div>
+              <select id="sim-method-select" class="sim-method-select">
+                <option value="mshep" selected>Shepard Modificado Local (MSHEP-QR · No Polinomial)</option>
+                <option value="barycentric">Baricéntrico Lineal por Tramos P₁ (Delaunay Exacto)</option>
+                <option value="poly_qr">Polinomial Global Grado m=2 (Householder QR)</option>
+                <option value="poly_lu">Polinomial Global Grado m=2 (Ecuaciones Normales LU)</option>
+                <option value="monte_carlo">Simulación Monte Carlo 2D (K = 10,000 nodos)</option>
+              </select>
+            </div>
+
+            <div class="sim-control-group">
+              <div class="sim-control-label">
+                <span>2. Tolerancia Adaptativa ($\tau$)</span>
+                <span id="sim-tol-val" class="font-mono text-amber">τ = 8 (Malla Fina)</span>
+              </div>
+              <div class="sim-slider-container">
+                <input type="range" id="sim-tol-slider" class="sim-slider" min="0" max="4" step="1" value="4">
+                <div class="sim-slider-ticks">
+                  <span>τ=50</span>
+                  <span>τ=30</span>
+                  <span>τ=20</span>
+                  <span>τ=15</span>
+                  <span>τ=8 (Máx)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="sim-control-group">
+              <div class="sim-control-label">
+                <span>3. Altura Capa de Mezcla ($H_{\text{mix}}$)</span>
+                <span id="sim-hmix-val" class="font-mono text-cyan">1000 m</span>
+              </div>
+              <div class="sim-slider-container">
+                <input type="range" id="sim-hmix-slider" class="sim-slider" min="250" max="2000" step="50" value="1000">
+                <div class="sim-slider-ticks">
+                  <span>250m (Inversión)</span>
+                  <span>1000m (Estándar)</span>
+                  <span>2000m (Convección)</span>
+                </div>
+              </div>
+            </div>
+
+            <div id="sim-theorem-pill" class="math-box" style="margin: 0; font-size: 0.77rem; line-height: 1.42;">
+              Cargando diagnóstico del Teorema de Grado de Precisión...
+            </div>
+          </div>
+
+          <!-- Columna 2: Lienzo Interactivo de la Malla de Bogotá -->
+          <div class="hud-panel sim-viewport-panel" style="padding: 8px;">
+            <div class="canvas-wrapper">
+              <canvas id="bogota-mesh-canvas"></canvas>
+              <div class="canvas-overlay-hud">
+                <span>PROYECCIÓN MÉTRICA TANGENTE ($\phi_0 = 4.65^\circ\text{N}$)</span>
+                <span>ÁREA CONVEXA RMCAB: $252.3700\,\text{km}^2$</span>
+              </div>
+              <div class="canvas-legend">
+                <div class="legend-item">
+                  <span class="legend-color-dot" style="background: #10B981;"></span>
+                  <span>Norte ($18.2\,\mu\text{g}/\text{m}^3$)</span>
+                </div>
+                <div class="legend-item">
+                  <span class="legend-color-dot" style="background: #F59E0B;"></span>
+                  <span>Centro ($33.8\,\mu\text{g}/\text{m}^3$)</span>
+                </div>
+                <div class="legend-item">
+                  <span class="legend-color-dot" style="background: #EF4444;"></span>
+                  <span>Carvajal ($62.4\,\mu\text{g}/\text{m}^3$)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Columna 3: Telemetría Numérica y Ambiental -->
+          <div class="sim-telemetry-panel">
+            <div class="gauge-card highlight">
+              <span class="gauge-title">Concentración Media Ponderada ($\overline{C}_{\Omega}$)</span>
+              <div id="gauge-mean-conc" class="gauge-big-num text-emerald">31.98 µg/m³</div>
+              <div class="gauge-comparison-badge down">
+                <span>▼ -4.54% vs Media Simple Sesgada ($33.50\,\mu\text{g}/\text{m}^3$)</span>
+              </div>
+            </div>
+
+            <div class="gauge-card">
+              <span class="gauge-title">Densidad Lineal Vertical ($I_{\Omega} = \iint_{\Omega} C\,dx\,dy$)</span>
+              <div id="gauge-integral" class="gauge-big-num text-cyan" style="font-size: 1.55rem;">8070.9 g/m</div>
+              <span class="metric-sub">Gramos de $\text{PM}_{10}$ por cada metro de altura vertical</span>
+            </div>
+
+            <div class="gauge-card">
+              <span class="gauge-title">Masa Total en Capa de Mezcla ($M_{\text{total}} = I_{\Omega}\cdot H_{\text{mix}}$)</span>
+              <div id="gauge-mass-ton" class="gauge-big-num text-amber" style="font-size: 1.65rem;">8.07 Toneladas</div>
+              <span id="gauge-mass-kg" class="metric-sub font-mono">8070.9 kg suspendidos en la atmósfera</span>
+            </div>
+
+            <div class="grid-2col" style="gap: 8px;">
+              <div class="metric-box">
+                <div class="metric-label">Triángulos ($|\mathcal{T}|$)</div>
+                <div id="gauge-cells-count" class="metric-value" style="font-size: 1.25rem;">205</div>
+                <div class="metric-sub">Base: 28 celdas</div>
+              </div>
+              <div class="metric-box">
+                <div class="metric-label">Evaluaciones $S_f$</div>
+                <div id="gauge-evals-count" class="metric-value cyan" style="font-size: 1.25rem;">2730</div>
+                <div id="gauge-cpu-time" class="metric-sub">CPU: 3.12 ms</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <span>Ajusta la tolerancia $\tau$ o cambia el interpolador de Fase 1 para observar el Teorema de Grado de Precisión 2 en acción.</span>
+        <div class="modal-nav-btns">
+          <button id="btn-sim-continue-flight" class="modal-action-btn secondary">🕊️ Seguir Volando</button>
+          <button id="btn-sim-next-stop" class="modal-action-btn">Ir a Conclusiones (Parada 7) ▶</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts Modulares de Datos, Sonido, Gráficas SVG, Simulador, Mundo 2D y Motor de Vuelo -->
+  <script src="js/data.js"></script>
+  <script src="js/telemetry.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/simulator.js"></script>
+  <script src="js/slides_content.js"></script>
+  <script src="js/world_renderer.js"></script>
+  <script src="js/game_engine.js"></script>
+</body>
+</html>

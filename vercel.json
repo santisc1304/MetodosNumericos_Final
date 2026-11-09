@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/Presentacion/index.html"
+    },
+    {
+      "source": "/presentacion",
+      "destination": "/Presentacion/index.html"
+    },
+    {
+      "source": "/docs/informe",
+      "destination": "/docs/Entrega_Final_Metodos_Numericos.html"
+    }
+  ]
+}

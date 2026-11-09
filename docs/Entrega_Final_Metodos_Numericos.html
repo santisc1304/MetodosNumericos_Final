@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cubatura Numérica Adaptativa sobre Datos Dispersos - Entrega Final</title>
+    <!-- MathJax 3 Configuration for Native LaTeX Rendering -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary-blue: #0A2540;
+            --secondary-blue: #1A365D;
+            --accent-blue: #2B6CB0;
+            --light-bg: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-color: #2D3748;
+            --light-text: #4A5568;
+            --border-color: #CBD5E0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.36;
+            margin: 0;
+            padding: 0;
+            font-size: 12.6px;
+        }
+
+        .container {
+            max-width: 880px;
+            margin: 12px auto;
+            background-color: var(--card-bg);
+            padding: 20px 34px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.05);
+            border-radius: 8px;
+        }
+
+        .header-info {
+            text-align: center;
+            margin-bottom: 11px;
+            padding: 11px 16px;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            color: #FFFFFF;
+            border-radius: 6px;
+        }
+
+        .header-info .project-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin: 0 0 5px 0;
+            line-height: 1.22;
+            color: #FFFFFF;
+        }
+
+        .header-info .meta-item {
+            font-size: 0.80rem;
+            font-weight: 400;
+            margin: 2px 0;
+            color: #E2E8F0;
+        }
+
+        .header-info .meta-item strong {
+            color: #90CDF4;
+            font-weight: 600;
+        }
+
+        h2 {
+            font-size: 1.06rem;
+            color: var(--primary-blue);
+            margin-top: 13px;
+            margin-bottom: 4px;
+            border-bottom: 1.5px solid var(--border-color);
+            padding-bottom: 2px;
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 0.89rem;
+            color: var(--secondary-blue);
+            margin-top: 8px;
+            margin-bottom: 2px;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 5px;
+            color: var(--light-text);
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-bottom: 5px;
+            padding-left: 16px;
+        }
+
+        li {
+            margin-bottom: 2px;
+            color: var(--light-text);
+        }
+
+        li::marker {
+            color: var(--accent-blue);
+        }
+
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 5px 0;
+            font-size: 0.75rem;
+        }
+
+        .stats-table th, .stats-table td {
+            border: 1px solid var(--border-color);
+            padding: 3px 5px;
+            text-align: center;
+        }
+
+        .stats-table th {
+            background-color: #EDF2F7;
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .stats-table tr:nth-child(even) {
+            background-color: #F7FAFC;
+        }
+
+        .figure-wide {
+            text-align: center;
+            background: #FFFFFF;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 3px;
+            margin: 5px 0;
+        }
+
+        .figure-wide img {
+            width: 100%;
+            max-height: 180px;
+            object-fit: contain;
+        }
+
+        .figure-caption {
+            font-size: 0.70rem;
+            color: var(--light-text);
+            margin-top: 2px;
+            font-style: italic;
+            line-height: 1.16;
+        }
+
+        code {
+            background-color: #EDF2F7;
+            color: var(--primary-blue);
+            padding: 1px 3px;
+            border-radius: 3px;
+            font-size: 0.85em;
+        }
+
+        strong {
+            color: var(--secondary-blue);
+            font-weight: 600;
+        }
+
+        /* Estilos optimizados de impresión garantizando estrictamente <= 5 páginas */
+        @media print {
+            body {
+                background-color: #FFFFFF;
+                font-size: 7.7pt;
+                line-height: 1.22;
+            }
+            .container {
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                max-width: 100%;
+            }
+            .header-info {
+                background: #0A2540 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                padding: 5px 9px;
+                margin-bottom: 4px;
+            }
+            .header-info .project-title { font-size: 0.94rem; margin-bottom: 2px; }
+            .header-info .meta-item { font-size: 0.68rem; margin: 1px 0; }
+            @page {
+                margin: 0.65cm 0.95cm;
+                size: letter;
+            }
+            h2 {
+                page-break-after: avoid;
+                margin-top: 7px;
+                margin-bottom: 2px;
+                font-size: 0.86rem;
+                padding-bottom: 1px;
+            }
+            h3 {
+                page-break-after: avoid;
+                margin-top: 4px;
+                margin-bottom: 1.5px;
+                font-size: 0.77rem;
+            }
+            p, li {
+                margin-bottom: 1.8px;
+            }
+            p, li, .stats-table, .figure-wide {
+                page-break-inside: avoid;
+            }
+            .figure-wide {
+                padding: 1px;
+                margin: 3px 0;
+            }
+            .figure-wide img {
+                max-height: 118px;
+            }
+            .figure-caption {
+                font-size: 0.63rem;
+            }
+            .stats-table {
+                font-size: 0.66rem;
+                margin: 3px 0;
+            }
+            .stats-table th, .stats-table td {
+                padding: 1.8px 3.5px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Encabezado Oficial -->
+        <div class="header-info">
+            <h1 class="project-title">Cubatura Numérica Adaptativa sobre Datos Dispersos: Estimación de la Carga Atmosférica de Material Particulado (PM10) en Bogotá</h1>
+            <div class="meta-item"><strong>Artículo Base:</strong> <em>Numerical cubature on scattered data by adaptive interpolation</em> (Cavoretto, De Rossi, &amp; Erb, 2024)</div>
+            <div class="meta-item"><strong>Integrantes:</strong> Santiago Sandoval Cortés &nbsp;|&nbsp; Miguel David Moreno Lozano &nbsp;|&nbsp; Luis Alejandro Camacho Benitez</div>
+            <div class="meta-item"><strong>Profesor:</strong> Edwin Fernando Muñoz Chipatecua &nbsp;|&nbsp; <strong>Asignatura:</strong> Métodos Numéricos (Universidad Externado de Colombia)</div>
+        </div>
+
+        <!-- 1. Solución Computacional Final y Modificación Metodológica -->
+        <h2>1. Solución Computacional Final y Modificación Metodológica</h2>
+        <p>
+            En esta fase final consolidamos la solución computacional al problema de estimar la carga atmosférica total de contaminantes en Bogotá, partiendo de mediciones dispersas de $PM_{10}$ de la Red de Monitoreo de Calidad del Aire de Bogotá (RMCAB, 2023). Adaptamos la metodología de Cavoretto, De Rossi y Erb (2024) resolviendo las singularidades físicas, geométricas y numéricas del entorno urbano.
+        </p>
+
+        <h3>1.1. Metodología Original frente a la Modificación Propuesta</h3>
+        <p>
+            Cavoretto et al. (2024) formulan la cubatura numérica $\iint_\Omega f(x,y)\,dx\,dy$ sobre datos dispersos $X_N = \{(x_i, y_i)\}_{i=1}^N \subset \Omega$, restringiéndose a dominios analíticos canónicos (disco $\mathbb{D}$, esfera $\mathbb{S}^2$ o cuadrado $[0,1]^2$) mediante fórmulas algebraicas globales precalculadas. En nuestro proyecto extendemos este marco teórico a un <strong>dominio geográfico real no estructurado</strong> ($\Omega_{\text{Bog}}$), definido como la envolvente convexa triangulada de las 20 estaciones de monitoreo activas en Bogotá, proyectadas a coordenadas euclidianas métricas planas en kilómetros ($\text{km}$) centradas en $\lambda_0 = -74.10^\circ$, $\phi_0 = 4.65^\circ$ ($R_\oplus = 6371\,\text{km}$, área $\operatorname{Area}(\Omega_{\text{Bog}}) = 252.37\,\text{km}^2$).
+        </p>
+
+        <table class="stats-table">
+            <thead>
+                <tr>
+                    <th>Eje Metodológico</th>
+                    <th>Artículo Original (Cavoretto et al., 2024)</th>
+                    <th>Solución Final Propuesta por el Equipo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Dominio de Integración</strong></td>
+                    <td>Canónico regular analítico ($[0,1]^2$, disco, esfera).</td>
+                    <td>Dominio geográfico real no convexo en km ($\Omega_{\text{Bog}}$, $252.37\,\text{km}^2$).</td>
+                </tr>
+                <tr>
+                    <td><strong>Malla de Discretización</strong></td>
+                    <td>Quadtree ortogonal regular simétrico.</td>
+                    <td>Triangulación métrica de Delaunay adaptativa encajada 1:4.</td>
+                </tr>
+                <tr>
+                    <td><strong>Reconstrucción Continua</strong></td>
+                    <td>Polinomios ortogonales y RBF globales.</td>
+                    <td>Shepard Modificado (MSHEP-QR) con polinomios locales compactos.</td>
+                </tr>
+                <tr>
+                    <td><strong>Estabilidad de Solvers</strong></td>
+                    <td>Ecuaciones normales asumidas bien condicionadas.</td>
+                    <td>Factorización QR directa por Reflexiones de Householder ($\kappa_2(R)=\kappa_2(A)$).</td>
+                </tr>
+                <tr>
+                    <td><strong>Consistencia Física</strong></td>
+                    <td>Integrales matemáticas adimensionales.</td>
+                    <td>Densidad lineal de masa ($\text{g}/\text{m}$), concentración media y masa en $H_{\text{mix}}$.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>1.2. Consistencia Dimensional y Significado Físico</h3>
+        <p>
+            Integrar una concentración volumétrica $C(x,y)$ en $\mu\text{g}/\text{m}^3$ sobre un área bidimensional en kilómetros cuadrados ($\text{km}^2 \equiv 10^6\,\text{m}^2$) no entrega directamente masa en kilogramos, sino <strong>densidad lineal de masa vertical</strong>:
+            $$I_\Omega(C) = \iint_{\Omega_{\text{Bog}}} C(x, y)\,dx\,dy \quad \left[\frac{\mu\text{g}}{\text{m}^3} \cdot 10^6\,\text{m}^2 = \frac{\text{g}}{\text{m}} = \frac{\text{kg}}{\text{km de columna atmosférica}}\right]$$
+            A partir de $I_\Omega(C)$ derivamos dos cantidades operativas fundamentales:
+        </p>
+        <ul>
+            <li><strong>Concentración Media Espacial Territorial ($\overline{C}_\Omega$):</strong> $\overline{C}_\Omega = \frac{I_\Omega(C)}{\operatorname{Area}(\Omega_{\text{Bog}})}$ en $\mu\text{g}/\text{m}^3$. Corrige el sesgo por aglomeración de estaciones.</li>
+            <li><strong>Masa Total en la Capa de Mezcla ($M_{\text{mix}}$):</strong> $M_{\text{mix}} = H_{\text{mix}} \cdot I_\Omega(C)$ en kilogramos ($\text{kg}$), evaluada en alturas típicas de mezcla en la sabana de Bogotá ($H_{\text{mix}} = 500\,\text{m}$ y $1000\,\text{m}$).</li>
+        </ul>
+
+        <!-- 2. Fundamentación y Justificación de los Métodos Numéricos -->
+        <h2>2. Métodos Numéricos Seleccionados y Justificación Teórica</h2>
+        <p>
+            En estricto cumplimiento del numeral 1.4 de la Guía, todos los algoritmos fueron implementados desde cero en Python sin librerías de caja negra:
+        </p>
+
+        <h3>2.1. Álgebra Lineal Numérica: QR de Householder vs Ecuaciones Normales LU</h3>
+        <p>
+            Para resolver el ajuste sobredeterminado $A\mathbf{c} \approx \mathbf{z}$ ($A \in \mathbb{R}^{m \times n}$), las ecuaciones normales $(A^T A)\mathbf{c} = A^T\mathbf{z}$ resueltas mediante factorización $PA=LU$ duplican el número de condición espectral: $\kappa_2(A^T A) = [\kappa_2(A)]^2$. En precisión doble IEEE-754 ($\epsilon_{\text{mach}} \approx 2.22 \times 10^{-16}$), si $\kappa_2(A) > 10^8$, la matriz $A^T A$ supera $\kappa_2 > 10^{16}$, colapsando la precisión numérica.
+        </p>
+        <p>
+            Nuestra implementación aplica $n$ transformaciones ortogonales simétricas de Householder $H_k = I - 2 \frac{\mathbf{v}_k \mathbf{v}_k^T}{\mathbf{v}_k^T \mathbf{v}_k}$ con la regla de signo de Wilkinson $\mathbf{v}_k(1) = x_{kk} + \operatorname{sign}(x_{kk})\|\mathbf{x}_k\|_2$ (evitando la cancelación numérica destructiva), de modo que $Q^T A = R = \begin{bmatrix} R_1 \\ 0 \end{bmatrix}$. Al resolver el sistema triangular $R_1 \mathbf{c} = (Q^T \mathbf{z})_{1:n}$ por sustitución regresiva, la condición se preserva intacta: $\kappa_2(R_1) = \kappa_2(A)$.
+        </p>
+
+        <h3>2.2. Reconstrucción Continua: Shepard Modificado (MSHEP-QR) y Baricéntrico</h3>
+        <p>
+            La superficie continua $S(x,y)$ se evalúa mediante una combinación de polinomios locales $P_k(x,y)$:
+            $$S(x,y) = \sum_{k=1}^N W_k(x,y) P_k(x,y), \quad W_k(x,y) = \frac{w_k(x,y)}{\sum_{j=1}^N w_j(x,y)}, \quad w_k(x,y) = \left[\frac{(R_w - d_k(x,y))_+}{R_w d_k(x,y)}\right]^2$$
+            Cada $P_k(x,y)$ se ajusta sobre los $k_{\text{neighbors}}$ más cercanos resolviendo un sistema de mínimos cuadrados ponderados mediante nuestro solver QR de Householder. Para contraste, implementamos también el interpolador lineal baricéntrico continuo a trozos ($C^0$) sobre la triangulación de Delaunay.
+        </p>
+
+        <h3>2.3. Integración Adaptativa Encajada sobre Triángulos y Regla del Grado de Precisión</h3>
+        <p>
+            Transformamos cada triángulo $T$ al triángulo unitario de referencia $\hat{T}$ con $|J| = 2\operatorname{Area}(T)$, aplicando un par de fórmulas con pesos estrictamente positivos:
+        </p>
+        <ul>
+            <li><strong>Regla de Gauss (3 puntos):</strong> $Q_2(T) = \operatorname{Area}(T) \sum_{j=1}^3 \frac{1}{3} f(\mathbf{x}_j^{(2)})$, con **Grado de Precisión Algebraico exacto $d_p = 2$**.</li>
+            <li><strong>Regla de Radon-Dunavant (7 puntos):</strong> $Q_5(T) = \operatorname{Area}(T) \left[ 0.225 f(\mathbf{x}_0) + \sum_{j=1}^3 w_1 f(\mathbf{x}_j^{(a)}) + \sum_{j=1}^3 w_2 f(\mathbf{x}_j^{(b)}) \right]$, con **Grado de Precisión $d_p = 5$**.</li>
+        </ul>
+        <p>
+            El estimador de error local es $\hat{\varepsilon}(T) = |Q_5(T) - Q_2(T)|$. Si $\hat{\varepsilon}(T) > \tau \frac{\operatorname{Area}(T)}{\operatorname{Area}(\Omega)}$, el triángulo se subdivide en 4 subtriángulos conectando los puntos medios de sus aristas (partición 1:4).
+        </p>
+        <p>
+            <strong>Teorema de Anulación del Error Local en Polinomios:</strong> Como la regla base $Q_2$ tiene grado de precisión 2, cualquier polinomio de grado $\le 2$ (como el interpolador lineal baricéntrico o el polinomio cuadrático de mínimos cuadrados) es integrado de manera idéntica y exacta por $Q_2$ y $Q_5$ dentro de cada celda: $|Q_5(T) - Q_2(T)| \equiv 0$. Por esta razón matemática, dichos métodos permanecen exactamente en las 28 celdas iniciales. En contraste, Shepard Modificado es una función racional no polinómica con alta curvatura local en Carvajal-Kennedy, lo que dispara $\hat{\varepsilon}(T) > \tau$ y densifica la malla hasta 205 celdas.
+        </p>
+
+        <!-- 3. Resultados Experimentales, Validación y Discusión Crítica -->
+        <h2>3. Resultados Experimentales, Validación y Discusión Crítica</h2>
+
+        <h3>3.1. Experimento 1: Estabilidad Numérica y Condicionamiento</h3>
+        <p>
+            Ajustamos polinomios de grado 1 a 4 sobre 65 nodos dispersos. Como muestra la Tabla 1 y la Figura 1, en grado 4 la matriz de ecuaciones normales con LU alcanza $\kappa_2(A^T A) = 8.79 \times 10^{20}$, rebasando el límite de la precisión doble ($10^{16}$) y generando un error relativo destructivo del $58.4\%$ en los coeficientes. En contraste, QR de Householder conserva $\kappa_2(R) = 2.64 \times 10^{11}$, con un error mínimo de $1.34 \times 10^{-9}$ y ortogonalidad estricta $\|Q^T Q - I\|_F = 1.91 \times 10^{-15}$.
+        </p>
+
+        <table class="stats-table">
+            <thead>
+                <tr>
+                    <th>Grado ($d$)</th>
+                    <th>Términos ($p$)</th>
+                    <th>$\kappa_2(R) = \kappa_2(A)$ (QR)</th>
+                    <th>$\kappa_2(A^T A) = [\kappa_2(A)]^2$ (LU)</th>
+                    <th>Error Rel. Coeficientes QR</th>
+                    <th>Error Rel. Coeficientes LU</th>
+                    <th>Ortogonalidad $\|Q^T Q - I\|_F$</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>1</strong></td>
+                    <td>3</td>
+                    <td>$8.66 \times 10^{2}$</td>
+                    <td>$7.49 \times 10^{5}$</td>
+                    <td>$9.25 \times 10^{-16}$</td>
+                    <td>$4.32 \times 10^{-13}$</td>
+                    <td>$6.80 \times 10^{-16}$</td>
+                </tr>
+                <tr>
+                    <td><strong>2</strong></td>
+                    <td>6</td>
+                    <td>$6.78 \times 10^{5}$</td>
+                    <td>$4.60 \times 10^{11}$</td>
+                    <td>$2.70 \times 10^{-14}$</td>
+                    <td>$1.04 \times 10^{-8}$</td>
+                    <td>$1.12 \times 10^{-15}$</td>
+                </tr>
+                <tr>
+                    <td><strong>3</strong></td>
+                    <td>10</td>
+                    <td>$4.05 \times 10^{8}$</td>
+                    <td>$1.59 \times 10^{17}$</td>
+                    <td>$3.91 \times 10^{-11}$</td>
+                    <td>$7.25 \times 10^{-5}$</td>
+                    <td>$1.54 \times 10^{-15}$</td>
+                </tr>
+                <tr>
+                    <td><strong>4</strong></td>
+                    <td>15</td>
+                    <td>$2.64 \times 10^{11}$</td>
+                    <td>$8.79 \times 10^{20}$</td>
+                    <td>$1.34 \times 10^{-9}$</td>
+                    <td>$5.84 \times 10^{-1}$ (Falla por redondeo)</td>
+                    <td>$1.91 \times 10^{-15}$</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="figure-wide">
+            <img src="graphs/fig1_estabilidad_lu_vs_qr.png" alt="Estabilidad QR vs LU">
+            <div class="figure-caption"><strong>Figura 1:</strong> (A) El mal condicionamiento espectral de las ecuaciones normales con LU crece cuadráticamente. (B) QR de Householder conserva la estabilidad numérica y evita la pérdida de cifras significativas.</div>
+        </div>
+
+        <h3>3.2. Experimento 2: Orden Empírico de Convergencia (EOC) y Error Stalling</h3>
+        <p>
+            Sobre la función matemática de Franke en $[0,1]^2$ ($I_{\text{exact}} = 0.406969589492$), calculamos formalmente la tasa de convergencia empírica $p_k = \frac{\ln(E_{k-1}/E_k)}{\ln(2)}$ al reducir el tamaño de celda a la mitad ($h \to h/2$). Como se detalla en la Tabla 2 y Figura 2:
+        </p>
+        <ul>
+            <li><strong>Convergencia de Orden Superior en Malla Uniforme:</strong> La cubatura de 7 puntos alcanza $p_k \approx 6.4$ y reduce el error relativo a $1.38 \times 10^{-7}$. La cubatura adaptativa logra un error de $1.48 \times 10^{-6}$ con solo 644 evaluaciones, superando a Monte Carlo que requiere 25,000 muestras para un modesto $1.16 \times 10^{-4}$ ($\mathcal{O}(K^{-1/2})$).</li>
+            <li><strong>Verificación Matemática del Error Stalling:</strong> Al integrar el interpolante construido sobre datos dispersos ($N=35$ y $N=250$), la tasa empírica $p_k$ cae abruptamente de valores positivos hasta **$p_k \to 0.00$** (Tabla 2). A partir del Nivel 2, el error total se estanca irremediablemente en $1.8\%$ ($N=35$) y $0.06\%$ ($N=250$), comprobando numéricamente la cota teórica de Cavoretto et al. $E(f) \le C_1 h_X^k + C_2 h_\mathcal{T}^p$.</li>
+        </ul>
+
+        <table class="stats-table">
+            <thead>
+                <tr>
+                    <th>Método de Integración en $[0,1]^2$</th>
+                    <th>Configuración</th>
+                    <th>Evaluaciones ($M$)</th>
+                    <th>Integral Calculada</th>
+                    <th>Error Absoluto</th>
+                    <th>Error Relativo</th>
+                    <th>Tasa Empírica ($p_k$)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Cubatura Uniforme (7 pts, Dunavant)</strong></td>
+                    <td>Nivel 0 (2 triángulos)</td>
+                    <td>14</td>
+                    <td>0.40628373</td>
+                    <td>$6.86 \times 10^{-4}$</td>
+                    <td>$1.69 \times 10^{-3}$</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><strong>Cubatura Uniforme (7 pts, Dunavant)</strong></td>
+                    <td>Nivel 1 (8 triángulos)</td>
+                    <td>56</td>
+                    <td>0.40728135</td>
+                    <td>$3.12 \times 10^{-4}$</td>
+                    <td>$7.66 \times 10^{-4}$</td>
+                    <td>1.13</td>
+                </tr>
+                <tr>
+                    <td><strong>Cubatura Uniforme (7 pts, Dunavant)</strong></td>
+                    <td>Nivel 2 (32 triángulos)</td>
+                    <td>224</td>
+                    <td>0.40697321</td>
+                    <td>$3.63 \times 10^{-6}$</td>
+                    <td>$8.91 \times 10^{-6}$</td>
+                    <td>6.42</td>
+                </tr>
+                <tr>
+                    <td><strong>Cubatura Uniforme (7 pts, Dunavant)</strong></td>
+                    <td>Nivel 3 (128 triángulos)</td>
+                    <td>896</td>
+                    <td>0.40696953</td>
+                    <td>$5.62 \times 10^{-8}$</td>
+                    <td>$1.38 \times 10^{-7}$</td>
+                    <td>8.82</td>
+                </tr>
+                <tr>
+                    <td><strong>Cubatura Adaptativa Directa (3/7 pts)</strong></td>
+                    <td>$\text{Tol} = 8\times 10^{-4}$</td>
+                    <td>644</td>
+                    <td>0.40697019</td>
+                    <td>$6.00 \times 10^{-7}$</td>
+                    <td>$1.48 \times 10^{-6}$</td>
+                    <td>— (Óptimo local)</td>
+                </tr>
+                <tr>
+                    <td><strong>Simulación Monte Carlo (<code>seed=42</code>)</strong></td>
+                    <td>$K = 25,000$ muestras</td>
+                    <td>25,000</td>
+                    <td>0.40692227</td>
+                    <td>$4.73 \times 10^{-5}$</td>
+                    <td>$1.16 \times 10^{-4}$</td>
+                    <td>$\mathcal{O}(K^{-1/2})$</td>
+                </tr>
+                <tr>
+                    <td><strong>Shepard MSHEP-QR ($N=35$)</strong></td>
+                    <td>Nivel 2 $\to$ Nivel 3</td>
+                    <td>224 $\to$ 896</td>
+                    <td>0.41428647</td>
+                    <td>$7.32 \times 10^{-3}$</td>
+                    <td>$1.80 \times 10^{-2}$</td>
+                    <td><strong>0.04 $\to$ 0.00 (Estancado)</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Shepard MSHEP-QR ($N=250$)</strong></td>
+                    <td>Nivel 2 $\to$ Nivel 3</td>
+                    <td>224 $\to$ 896</td>
+                    <td>0.40670199</td>
+                    <td>$2.68 \times 10^{-4}$</td>
+                    <td>$6.58 \times 10^{-4}$</td>
+                    <td><strong>0.38 $\to$ 0.17 (Estancado)</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="figure-wide">
+            <img src="graphs/fig2_convergencia_franke.png" alt="Convergencia y Error Stalling en Franke">
+            <div class="figure-caption"><strong>Figura 2:</strong> (A) Tasa de convergencia adaptativa frente a Monte Carlo. (B) Demostración del colapso de la tasa de convergencia ($p_k \to 0$) dictada por la distancia de llenado de los datos dispersos.</div>
+        </div>
+
+        <h3>3.3. Experimento 3: Estimación de la Carga de $PM_{10}$ en Bogotá y Validación Numérica</h3>
+        <p>
+            Al aplicar el esquema sobre la red de Bogotá (Figura 3), la malla inicial de 28 triángulos creció automáticamente a 205 celdas en Shepard Modificado, concentrándose en el foco crítico del suroccidente (Carvajal-Sevillana con $71.6\,\mu\text{g}/\text{m}^3$ y Kennedy con $43.2\,\mu\text{g}/\text{m}^3$). El método arrojó una integral de $7,372.03\,\text{g}/\text{m}$, correspondiente a una **concentración territorial media de $29.21\,\mu\text{g}/\text{m}^3$** y una masa total suspendida de **$3.69\,\text{toneladas}$** en una capa de $500\,\text{m}$ ($7.37\,\text{t}$ en $1000\,\text{m}$).
+        </p>
+
+        <div class="figure-wide">
+            <img src="graphs/fig3_malla_adaptativa_bogota.png" alt="Malla Adaptativa en Bogotá">
+            <div class="figure-caption"><strong>Figura 3:</strong> (A) Malla inicial métrica de 28 celdas ($252.37\,\text{km}^2$). (B) Malla adaptativa refinada (205 celdas), concentrando automáticamente la resolución en las áreas con gradientes abruptos de emisión.</div>
+        </div>
+
+        <table class="stats-table">
+            <thead>
+                <tr>
+                    <th>Método de Superficie + Integración</th>
+                    <th>Integral de Superficie $I_\Omega$</th>
+                    <th>Conc. Media Territorial $\overline{C}_\Omega$</th>
+                    <th>Masa Capa $500\,\text{m}$</th>
+                    <th>Masa Capa $1000\,\text{m}$</th>
+                    <th>Celdas</th>
+                    <th>Evaluaciones</th>
+                    <th>Tiempo CPU</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Polinomio Mín. Cuadrados (QR) + Adaptativa</strong></td>
+                    <td>$7,839.67\,\text{g}/\text{m}$</td>
+                    <td>31.06 µg/m³</td>
+                    <td>3,919.83 kg (3.92 t)</td>
+                    <td>7,839.67 kg (7.84 t)</td>
+                    <td>28</td>
+                    <td>280</td>
+                    <td>10.12 ms</td>
+                </tr>
+                <tr>
+                    <td><strong>Polinomio Mín. Cuadrados (LU) + Adaptativa</strong></td>
+                    <td>$7,839.67\,\text{g}/\text{m}$</td>
+                    <td>31.06 µg/m³</td>
+                    <td>3,919.83 kg (3.92 t)</td>
+                    <td>7,839.67 kg (7.84 t)</td>
+                    <td>28</td>
+                    <td>280</td>
+                    <td>11.45 ms</td>
+                </tr>
+                <tr>
+                    <td><strong>Shepard Modificado (MSHEP-QR) + Adaptativa</strong></td>
+                    <td>$7,372.03\,\text{g}/\text{m}$</td>
+                    <td>29.21 µg/m³</td>
+                    <td>3,686.01 kg (3.69 t)</td>
+                    <td>7,372.03 kg (7.37 t)</td>
+                    <td>205</td>
+                    <td>2,640</td>
+                    <td>350.41 ms</td>
+                </tr>
+                <tr>
+                    <td><strong>Shepard Modificado + Malla Uniforme (Nivel 2)</strong></td>
+                    <td>$7,372.07\,\text{g}/\text{m}$</td>
+                    <td>29.21 µg/m³</td>
+                    <td>3,686.04 kg (3.69 t)</td>
+                    <td>7,372.07 kg (7.37 t)</td>
+                    <td>448</td>
+                    <td>3,136</td>
+                    <td>397.72 ms</td>
+                </tr>
+                <tr>
+                    <td><strong>Interpolación Lineal Baricéntrica + Adaptativa</strong></td>
+                    <td>$7,498.16\,\text{g}/\text{m}$</td>
+                    <td>29.71 µg/m³</td>
+                    <td>3,749.08 kg (3.75 t)</td>
+                    <td>7,498.16 kg (7.50 t)</td>
+                    <td>28</td>
+                    <td>280</td>
+                    <td>38.75 ms</td>
+                </tr>
+                <tr>
+                    <td><strong>Simulación Monte Carlo ($K=10,000$ puntos)</strong></td>
+                    <td>$7,361.79\,\text{g}/\text{m}$</td>
+                    <td>29.17 µg/m³</td>
+                    <td>3,680.89 kg (3.68 t)</td>
+                    <td>7,361.79 kg (7.36 t)</td>
+                    <td>28</td>
+                    <td>10,000</td>
+                    <td>1,086.18 ms</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="figure-wide">
+            <img src="graphs/fig4_comparacion_metodos_bogota.png" alt="Comparación de Métodos en Bogotá">
+            <div class="figure-caption"><strong>Figura 4:</strong> (A) La integración espacial corrige el sesgo al alza del promedio aritmético simple ($33.50\,\mu\text{g}/\text{m}^3$), fijando la exposición real en $29.21\,\mu\text{g}/\text{m}^3$. (B) Eficiencia de la cubatura adaptativa frente al costo masivo de Monte Carlo.</div>
+        </div>
+
+        <p>
+            <strong>Validación Formal contra Implementación de Referencia (Numerales 1.4 y 8.3 de la Guía):</strong> Evaluamos nuestro interpolador baricéntrico frente al solver oficial <code>matplotlib.tri.LinearTriInterpolator</code> en 500 puntos aleatorios interiores. La discrepancia máxima fue de **$2.13 \times 10^{-13}$**, demostrando que el código desarrollado desde cero es numéricamente exacto a nivel de precisión de máquina.
+        </p>
+
+        <p>
+            <strong>Análisis de Sensibilidad de Hiperparámetros ($k_{\text{neighbors}}$):</strong> Al variar el número de vecinos locales en Shepard entre $k \in \{5, 6, 7, 8, 10\}$, la concentración media territorial osciló de forma sumamente estable entre $28.19$ y $29.54\,\mu\text{g}/\text{m}^3$. El valor óptimo $k=7$ asegura rango completo en el ajuste local evitando el sobreajuste local del ruido y oscilaciones de Runge.
+        </p>
+
+        <!-- 4. Limitaciones, Conclusiones y Referencias -->
+        <h2>4. Limitaciones, Conclusiones y Referencias</h2>
+        <ul>
+            <li><strong>Corrección del Sesgo Espacial:</strong> El promedio simple no ponderado de las 20 estaciones ($33.50\,\mu\text{g}/\text{m}^3$) sobreestima la exposición real en un $12.8\%$ debido al agrupamiento de sensores en Kennedy y Carvajal. La cubatura adaptativa pondera adecuadamente las grandes extensiones del norte y oriente, fijando la concentración media en **$29.21\,\mu\text{g}/\text{m}^3$**.</li>
+            <li><strong>Superioridad del Solver QR de Householder:</strong> Ante el crecimiento del grado polinómico, el solver QR evitó la pérdida de precisión catastrófica que afectó a las ecuaciones normales con LU ($58.4\%$ de error en grado 4 por $\kappa_2 > 10^{20}$).</li>
+            <li><strong>Limitaciones del Modelo:</strong> El dominio actual se circunscribe a la envolvente convexa plana ignorando la barrera topográfica de los Cerros Orientales, y asume una capa de mezcla homogénea vertical.</li>
+            <li><strong>Trabajo Futuro:</strong> Modelar la dispersión vertical en capas no uniformes mediante ecuaciones de advección-difusión y extender el esquema multiespectral hacia material particulado fino ($PM_{2.5}$).</li>
+        </ul>
+
+        <h3>Referencias Bibliográficas</h3>
+        <ol style="font-size: 0.73rem; color: var(--light-text); padding-left: 14px; margin-bottom: 2px;">
+            <li>Cavoretto, R., De Rossi, A., &amp; Erb, W. (2024). <em>Numerical cubature on scattered data by adaptive interpolation</em>. Journal of Computational and Applied Mathematics, 444, 115793.</li>
+            <li>Turner, P. R., Arildsen, T., &amp; Kavanagh, K. (2018). <em>Applied Scientific Computing: With Python</em>. Springer.</li>
+            <li>Kroese, D. P., Taimre, T., &amp; Botev, Z. I. (2011). <em>Handbook of Monte Carlo Methods</em>. John Wiley &amp; Sons.</li>
+            <li>Secretaría Distrital de Ambiente (SDA). (2023). <em>Red de Monitoreo de Calidad del Aire de Bogotá (RMCAB) - Informe Anual SISAIRE</em>. Alcaldía Mayor de Bogotá.</li>
+        </ol>
+
+    </div>
+
+</body>
+</html>
+

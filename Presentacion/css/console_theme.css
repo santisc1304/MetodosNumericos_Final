@@ -1,0 +1,176 @@
+/* ==========================================================================
+   NATURE & ECO-URBAN THEME: Sabana de Bogotá & Transición Urbana
+   Paleta: Blanco Nube, Verde Esmeralda, Verde Bosque y Ladrillo Bogotano
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap');
+
+:root {
+  /* Paleta botánica y naturaleza */
+  --bg-nature-cream: #F5F9F6;
+  --bg-nature-white: #FFFFFF;
+  --bg-nature-card: rgba(255, 255, 255, 0.90);
+  --bg-nature-card-solid: #FFFFFF;
+  --bg-surface-hover: rgba(216, 243, 220, 0.5);
+
+  /* Verdes de la Sabana y Cerros Orientales */
+  --green-deep: #1B4332;       /* Pino / Roble andino */
+  --green-forest: #2D6A4F;     /* Verde bosque nativo */
+  --green-emerald: #40916C;    /* Esmeralda suave */
+  --green-mint: #52B788;       /* Brote / hoja tierna */
+  --green-light: #D8F3DC;      /* Fondo suave de alertas positivas */
+  --green-border: rgba(45, 106, 79, 0.22);
+
+  /* Acentos de Ciudad y Calidad del Aire (Ladrillo Bogotano y Alertas) */
+  --brick-terracotta: #C85A32;  /* Ladrillo bogotano / Carvajal PM10 */
+  --brick-red: #DC2626;         /* Alerta de contaminación */
+  --brick-amber: #D97706;       /* Precaución moderada */
+  --sky-blue: #0284C7;          /* Aire limpio / cielo de la sabana */
+
+  /* Textos nítidos sobre fondo claro */
+  --text-main: #132A20;         /* Verde petróleo muy oscuro, legible y cálido */
+  --text-title: #0D2319;
+  --text-muted: #4B6358;        /* Verde grisáceo suave */
+  --text-dim: #71887E;
+
+  /* Tipografías */
+  --font-sans: 'Inter', -apple-system, sans-serif;
+  --font-title: 'Outfit', 'Inter', sans-serif;
+  --font-mono: 'Fira Code', 'Courier New', monospace;
+
+  /* Sombras naturales y bordes suaves */
+  --shadow-card: 0 8px 24px -4px rgba(27, 67, 50, 0.08), 0 2px 6px -1px rgba(27, 67, 50, 0.04);
+  --shadow-hover: 0 14px 30px -6px rgba(27, 67, 50, 0.14);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-nature-cream);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  line-height: 1.45;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  user-select: none;
+  background-image: 
+    radial-gradient(circle at 10% 10%, rgba(82, 183, 136, 0.10) 0%, transparent 45%),
+    radial-gradient(circle at 90% 90%, rgba(45, 106, 79, 0.08) 0%, transparent 50%),
+    linear-gradient(to bottom, #F9FCFA 0%, #EFF6F1 100%);
+}
+
+/* Scrollbars naturales */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(216, 243, 220, 0.3);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(45, 106, 79, 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--green-forest);
+}
+
+/* Badges de Estado Ecológico */
+.hud-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  border-radius: 20px;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.hud-badge.cyan, .hud-badge.emerald {
+  background: #E8F5EC;
+  color: var(--green-deep);
+  border: 1px solid rgba(64, 145, 108, 0.3);
+}
+
+.hud-badge.amber {
+  background: #FEF3C7;
+  color: #92400E;
+  border: 1px solid rgba(217, 119, 6, 0.3);
+}
+
+.hud-badge.crimson {
+  background: #FEE2E2;
+  color: #991B1B;
+  border: 1px solid rgba(220, 38, 38, 0.3);
+}
+
+/* Indicadores de pulso botánicos */
+.led-pulse {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
+}
+
+.led-pulse.green {
+  background-color: var(--green-forest);
+  animation: pulse-leaf 2.2s infinite ease-in-out;
+}
+
+.led-pulse.cyan {
+  background-color: var(--sky-blue);
+  animation: pulse-leaf 2.2s infinite ease-in-out;
+}
+
+.led-pulse.red {
+  background-color: var(--brick-terracotta);
+  animation: pulse-leaf 1.2s infinite ease-in-out;
+}
+
+@keyframes pulse-leaf {
+  0% { transform: scale(0.92); opacity: 0.75; }
+  50% { transform: scale(1.18); opacity: 1; }
+  100% { transform: scale(0.92); opacity: 0.75; }
+}
+
+/* Tarjetas y Paneles Estilo Jardín y Arquitectura Sostenible */
+.hud-panel {
+  background: var(--bg-nature-card);
+  border: 1px solid var(--green-border);
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-card);
+  position: relative;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.hud-panel:hover {
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(45, 106, 79, 0.4);
+}
+
+/* Píldoras de Teorema Ecológico */
+.theorem-pill {
+  background: linear-gradient(135deg, #F0FDF4 0%, #E8F5EC 100%);
+  border-left: 4px solid var(--green-forest);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  font-size: 0.76rem;
+  color: var(--text-main);
+  line-height: 1.4;
+  box-shadow: 0 2px 6px rgba(45, 106, 79, 0.05);
+}
+
+.theorem-pill strong {
+  color: var(--green-deep);
+}

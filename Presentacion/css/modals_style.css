@@ -1,0 +1,408 @@
+/* ==========================================================================
+   MODALS STYLE CSS: Ventanas Flotantes de Diapositivas, Briefing del Copetón,
+   Simulador en Vivo y Nido Final
+   ========================================================================== */
+
+:root {
+  --green-border: rgba(45, 106, 79, 0.22);
+  --text-main: #12261E;
+  --text-dim: #526B5F;
+}
+
+/* Telón de fondo oscuro/translúcido cuando se abre una ventana flotante */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  background: rgba(14, 34, 24, 0.52);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.28s ease, visibility 0.28s ease;
+}
+
+.modal-backdrop.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Contenedor principal de la ventana flotante */
+.floating-modal {
+  width: min(1240px, 95vw);
+  max-height: 89vh;
+  background: #F9FCFA;
+  border: 2px solid rgba(45, 106, 79, 0.32);
+  border-radius: 22px;
+  box-shadow: 0 28px 70px rgba(10, 28, 20, 0.35);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: translateY(18px) scale(0.97);
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.modal-backdrop.active .floating-modal {
+  transform: translateY(0) scale(1);
+}
+
+/* Cabecera de la ventana flotante */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 26px;
+  background: linear-gradient(90deg, #E3F5E8 0%, #F4FAF6 100%);
+  border-bottom: 1.5px solid rgba(45, 106, 79, 0.2);
+}
+
+.modal-header.urban-theme {
+  background: linear-gradient(90deg, #FDECE6 0%, #FFF7ED 100%);
+  border-bottom-color: rgba(200, 90, 50, 0.28);
+}
+
+.modal-header.nest-theme {
+  background: linear-gradient(90deg, #FEF3C7 0%, #ECFDF5 100%);
+  border-bottom-color: rgba(217, 119, 6, 0.3);
+}
+
+.modal-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.modal-npc-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #FFFFFF;
+  border: 2px solid var(--green-forest);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.65rem;
+  box-shadow: 0 4px 10px rgba(27, 67, 50, 0.12);
+}
+
+.modal-title-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-zone-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--green-forest);
+}
+
+.modal-title {
+  font-family: var(--font-title);
+  font-size: 1.32rem;
+  font-weight: 800;
+  color: var(--green-deep);
+}
+
+.modal-close-btn {
+  background: #FFFFFF;
+  border: 1.5px solid rgba(45, 106, 79, 0.3);
+  color: var(--green-deep);
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.modal-close-btn:hover {
+  background: var(--green-deep);
+  color: #FFFFFF;
+}
+
+/* Cuerpo desplazable de la ventana flotante */
+.modal-body {
+  padding: 22px 26px;
+  overflow-y: auto;
+  flex: 1;
+  user-select: text;
+}
+
+/* Pie de la ventana flotante con navegación rápida */
+.modal-footer {
+  padding: 12px 26px;
+  background: #EFF7F2;
+  border-top: 1px solid rgba(45, 106, 79, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.modal-nav-btns {
+  display: flex;
+  gap: 10px;
+}
+
+.modal-action-btn {
+  background: var(--green-forest);
+  color: #FFFFFF;
+  border: none;
+  font-family: var(--font-title);
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 9px 20px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal-action-btn:hover {
+  background: var(--green-deep);
+  transform: translateY(-1px);
+}
+
+.modal-action-btn.secondary {
+  background: #FFFFFF;
+  color: var(--green-deep);
+  border: 1.5px solid rgba(45, 106, 79, 0.3);
+}
+
+.modal-action-btn.secondary:hover {
+  background: #D8F3DC;
+}
+
+/* ==========================================================================
+   SISTEMA DE REJILLAS, PANELES Y TABLAS DENTRO DE LAS VENTANAS FLOTANTES
+   ========================================================================== */
+.copeton-dialog-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: linear-gradient(90deg, #E8F6EC 0%, #F6FBF8 100%);
+  border-left: 4px solid var(--green-forest);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  font-size: 0.88rem;
+  line-height: 1.48;
+  color: var(--text-dark);
+}
+
+.copeton-dialog-banner strong {
+  color: var(--green-deep);
+}
+
+.grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.grid-3col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.hud-panel {
+  background: #FFFFFF;
+  border: 1px solid rgba(45, 106, 79, 0.2);
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-shadow: 0 4px 14px rgba(27, 67, 50, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(45, 106, 79, 0.14);
+  padding-bottom: 8px;
+  margin-bottom: 4px;
+}
+
+.panel-title {
+  font-family: var(--font-title);
+  font-size: 0.96rem;
+  font-weight: 800;
+  color: var(--green-deep);
+}
+
+.panel-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: #D8F3DC;
+  color: var(--green-deep);
+}
+
+.panel-tag.amber {
+  background: #FEF3C7;
+  color: #B45309;
+}
+
+.panel-tag.crimson {
+  background: #FEE2E2;
+  color: #B91C1C;
+}
+
+.panel-tag.cyan {
+  background: #E0F2FE;
+  color: #0369A1;
+}
+
+/* Cajas de Fórmulas Matemáticas */
+.math-box {
+  background: #F3FAF5;
+  border: 1px solid rgba(45, 106, 79, 0.22);
+  border-left: 4px solid var(--green-forest);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.86rem;
+  overflow-x: auto;
+}
+
+.math-box.amber {
+  background: #FFFBEB;
+  border-color: rgba(217, 119, 6, 0.3);
+  border-left-color: #D97706;
+}
+
+.math-box.crimson {
+  background: #FEF2F2;
+  border-color: rgba(220, 38, 38, 0.28);
+  border-left-color: #DC2626;
+}
+
+/* Tablas Académicas */
+.hud-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.80rem;
+}
+
+.hud-table th {
+  background: #E8F5EC;
+  color: var(--green-deep);
+  font-weight: 700;
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 2px solid rgba(45, 106, 79, 0.25);
+}
+
+.hud-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid rgba(45, 106, 79, 0.12);
+  color: var(--text-dark);
+}
+
+.hud-table tr.row-highlight {
+  background: #ECFDF5;
+  font-weight: 600;
+}
+
+.hud-table tr.row-danger {
+  background: #FEF2F2;
+}
+
+/* Tarjetas de Métrica */
+.metric-box {
+  background: #F4FAF6;
+  border: 1px solid rgba(45, 106, 79, 0.2);
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.metric-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.metric-value {
+  font-family: var(--font-title);
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--green-deep);
+  margin: 2px 0;
+}
+
+.metric-value.amber { color: #D97706; }
+.metric-value.crimson { color: #DC2626; }
+.metric-value.cyan { color: #0284C7; }
+
+.metric-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.hud-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.hud-list li {
+  position: relative;
+  padding-left: 18px;
+}
+
+.hud-list li::before {
+  content: '🌿';
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 0.75rem;
+}
+
+.text-emerald { color: var(--green-forest); }
+.text-amber { color: #D97706; }
+.text-crimson { color: #DC2626; }
+.text-cyan { color: #0284C7; }
+.font-mono { font-family: var(--font-mono); }
+
+/* ==========================================================================
+   MODAL DE INTRODUCCIÓN AL PERSONAJE Y RESUMEN DEL VIAJE (#intro-modal)
+   ========================================================================== */
+.intro-journey-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.journey-step-card {
+  background: #F4FAF6;
+  border: 1px solid rgba(45, 106, 79, 0.22);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.78rem;
+}
+
+.journey-step-card strong {
+  display: block;
+  color: var(--green-deep);
+  font-family: var(--font-title);
+  margin-bottom: 3px;
+}
+

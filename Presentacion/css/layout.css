@@ -1,0 +1,383 @@
+/* ==========================================================================
+   LAYOUT CSS: Master Nature & Urban Framework, Header & Dynamic Atmospheres
+   ========================================================================== */
+
+#app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  z-index: 10;
+}
+
+/* 1. Barra de Telemetría Superior (Estilo Estación Ambiental) */
+#telemetry-header {
+  height: 54px;
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid var(--green-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  font-family: var(--font-sans);
+  font-size: 0.80rem;
+  z-index: 50;
+  box-shadow: 0 2px 10px rgba(27, 67, 50, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+.header-left, .header-center, .header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.brand-title {
+  font-family: var(--font-title);
+  font-weight: 800;
+  color: var(--green-deep);
+  font-size: 0.98rem;
+  letter-spacing: 0.2px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.brand-title span {
+  color: var(--green-forest);
+}
+
+.telemetry-tag {
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.telemetry-val {
+  color: var(--green-deep);
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+/* 2. Viewport de Diapositivas */
+#slides-viewport {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  padding: 16px 28px 8px 28px;
+}
+
+.slide {
+  position: absolute;
+  top: 16px;
+  left: 28px;
+  right: 28px;
+  bottom: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(16px) scale(0.995);
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.4s;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: 16px;
+  padding: 8px 12px;
+}
+
+.slide.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  z-index: 20;
+}
+
+/* ==========================================================================
+   AMBIENTES DINÁMICOS POR DIAPOSITIVA (Naturaleza -> Ciudad)
+   ========================================================================== */
+
+/* Diapositiva 1: La Sabana y Cerros Orientales (Niebla matutina, alisos y cerros) */
+#slide-1 {
+  background: 
+    radial-gradient(ellipse at 80% 20%, rgba(82, 183, 136, 0.16) 0%, transparent 50%),
+    radial-gradient(circle at 10% 80%, rgba(45, 106, 79, 0.12) 0%, transparent 45%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(234, 246, 238, 0.7) 100%);
+}
+
+/* Diapositiva 2: Jardín Botánico Teórico (Paper Base) */
+#slide-2 {
+  background: 
+    radial-gradient(circle at 85% 15%, rgba(64, 145, 108, 0.14) 0%, transparent 40%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(240, 249, 242, 0.75) 100%);
+}
+
+/* Diapositiva 3: Cuenca Topográfica y Cartografía de Bogotá */
+#slide-3 {
+  background: 
+    radial-gradient(ellipse at 20% 70%, rgba(82, 183, 136, 0.15) 0%, transparent 50%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(238, 247, 241, 0.8) 100%);
+}
+
+/* Diapositiva 4: Laboratorio Científico de Precisión (QR vs LU) */
+#slide-4 {
+  background: 
+    radial-gradient(circle at 80% 85%, rgba(200, 90, 50, 0.08) 0%, transparent 45%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(242, 248, 244, 0.85) 100%);
+}
+
+/* Diapositiva 5: Brisas de la Sabana y Convergencia de Franke */
+#slide-5 {
+  background: 
+    radial-gradient(circle at 15% 20%, rgba(2, 132, 199, 0.10) 0%, transparent 50%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(236, 248, 244, 0.85) 100%);
+}
+
+/* Diapositiva 6: LA GRAN METRÓPOLI DE BOGOTÁ (Transición a Ciudad) */
+#slide-6 {
+  background: 
+    radial-gradient(ellipse at 15% 85%, rgba(200, 90, 50, 0.16) 0%, transparent 55%), /* Smog / Ladrillo Carvajal */
+    radial-gradient(circle at 85% 20%, rgba(45, 106, 79, 0.18) 0%, transparent 50%),  /* Cerros y Norte verde */
+    linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(246, 243, 238, 0.92) 100%);
+}
+
+/* Diapositiva 7: Bogotá Sostenible y Regenerativa (Futuro) */
+#slide-7 {
+  background: 
+    radial-gradient(circle at 50% 10%, rgba(82, 183, 136, 0.22) 0%, transparent 60%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(235, 248, 240, 0.85) 100%);
+}
+
+/* ==========================================================================
+   CABECERA Y REJILLA DE CADA DIAPOSITIVA
+   ========================================================================== */
+
+.slide-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  border-bottom: 2px solid rgba(45, 106, 79, 0.15);
+  padding-bottom: 8px;
+  margin-bottom: 2px;
+}
+
+.slide-title-group h2 {
+  font-family: var(--font-title);
+  font-size: 1.48rem;
+  font-weight: 800;
+  color: var(--green-deep);
+  letter-spacing: -0.3px;
+  line-height: 1.2;
+}
+
+.slide-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-top: 3px;
+}
+
+.slide-content-grid {
+  flex: 1;
+  display: grid;
+  gap: 16px;
+  min-height: 0;
+}
+
+.grid-2col { grid-template-columns: 1fr 1fr; }
+.grid-3col { grid-template-columns: 1fr 1fr 1fr; }
+.grid-2col-asym { grid-template-columns: 1.2fr 0.8fr; }
+.grid-2col-asym-rev { grid-template-columns: 0.8fr 1.2fr; }
+
+/* Contenido de tarjetas */
+.card-inner {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.card-title {
+  font-family: var(--font-title);
+  font-size: 0.90rem;
+  font-weight: 700;
+  color: var(--green-deep);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1.5px solid var(--green-border);
+  padding-bottom: 6px;
+  letter-spacing: -0.2px;
+}
+
+.metric-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.metric-box {
+  background: #FFFFFF;
+  border: 1px solid var(--green-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 6px rgba(27, 67, 50, 0.03);
+}
+
+.metric-label {
+  font-size: 0.70rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.metric-value {
+  font-family: var(--font-title);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--green-deep);
+  margin-top: 2px;
+}
+
+.metric-value.cyan, .metric-value.emerald { color: var(--green-forest); }
+.metric-value.amber { color: var(--brick-amber); }
+.metric-value.crimson { color: var(--brick-terracotta); }
+
+.metric-desc {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Tablas científicas claras y elegantes */
+.hud-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  background: #FFFFFF;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(27, 67, 50, 0.05);
+}
+
+.hud-table th, .hud-table td {
+  padding: 7px 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(45, 106, 79, 0.12);
+}
+
+.hud-table th {
+  background: #E8F5EC;
+  color: var(--green-deep);
+  font-weight: 700;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.hud-table tr:hover td {
+  background: var(--bg-surface-hover);
+}
+
+.highlight-row {
+  background: #F0FDF4;
+  font-weight: 600;
+}
+
+/* 3. Dock de Navegación Inferior (Barra Natural) */
+#command-dock {
+  height: 58px;
+  background: rgba(255, 255, 255, 0.95);
+  border-top: 1px solid var(--green-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  z-index: 50;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 -2px 10px rgba(27, 67, 50, 0.04);
+}
+
+.dock-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dock-steps {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.step-pill {
+  background: #F4F8F5;
+  border: 1px solid var(--green-border);
+  color: var(--text-muted);
+  padding: 6px 13px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.step-pill:hover {
+  background: #E8F5EC;
+  color: var(--green-deep);
+  border-color: var(--green-forest);
+}
+
+.step-pill.active {
+  background: var(--green-deep);
+  border-color: var(--green-deep);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(27, 67, 50, 0.25);
+}
+
+.dock-nav-btn {
+  background: #FFFFFF;
+  border: 1.5px solid var(--green-border);
+  color: var(--green-deep);
+  padding: 7px 18px;
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.dock-nav-btn:hover {
+  background: var(--green-forest);
+  color: #FFFFFF;
+  border-color: var(--green-forest);
+  box-shadow: 0 4px 12px rgba(45, 106, 79, 0.25);
+}
+
+.dock-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.keyboard-hint {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  font-weight: 500;
+}
