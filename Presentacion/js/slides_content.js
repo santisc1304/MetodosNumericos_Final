@@ -1,9 +1,10 @@
 /* ==========================================================================
    SLIDES CONTENT MODULE (slides_content.js)
-   Define los Amigos, Estructuras, Obstáculos Aéreos y el Contenido Académico
-   de cada Ventana Flotante durante el vuelo del Copetón Bogotano (Rufino).
-   Redacción clara, fórmulas totalmente desglosadas parámetro por parámetro
-   y lenguaje accesible para todo público sin perder el rigor numérico.
+   Estructura alineada al orden del proyecto con Storytelling con Datos:
+   FASE I:   Introducción (Parada 1: Artículo Original | Parada 2: Problema y Objetivos)
+   FASE II:  Metodología  (Parada 3: Cambio Metodológico y Propuesta)
+   FASE III: Resultados   (Parada 4: QR vs LU | Parada 5: Franke | Parada 6: Simulador)
+   FASE IV:  Conclusiones y Pasos a Futuro (Parada 7: Validación y Futuro | Parada 8: Nido)
    ========================================================================== */
 
 const WORLD_CONFIG = {
@@ -86,7 +87,9 @@ const WORLD_OBSTACLES = [
   }
 ];
 
-/* Las 8 Paradas Interactivas con Desglose Completo de Parámetros de cada Fórmula */
+/* Las 8 Paradas Interactivas ordenadas estrictamente:
+   Introducción (Artículo Original, Objetivos) -> Metodología (Cambio, Propuesta) ->
+   Resultados (Gráficos, Tablas, Métodos, Fórmulas, Soluciones) -> Conclusiones y Futuro */
 const WORLD_STOPS = [
   {
     id: 'stop-1',
@@ -95,74 +98,58 @@ const WORLD_STOPS = [
     kind: 'friend',
     spriteType: 'owl',
     icon: '🦉',
-    name: '1. El Búho Sabio del Humedal',
-    shortLabel: '1. Problema',
-    zoneName: 'Humedal de Guaymaral (Bosque Nativo)',
+    name: '1. Intro: Artículo Original (Búho)',
+    shortLabel: '1. Intro: Artículo Base',
+    zoneName: 'FASE I · INTRODUCCIÓN · Humedal de Guaymaral (18.2 µg/m³)',
     theme: 'nature',
     localPm10: '18.2 µg/m³',
-    title: 'Parada 1: El Problema Ambiental y la Falacia del Promedio Simple',
+    title: 'Introducción (1/2): El Artículo Original (Cavoretto, De Rossi & Erb, 2024)',
     renderHTML: () => `
       <div class="copeton-dialog-banner">
         <span style="font-size: 1.6rem;">🦉</span>
         <div>
-          <strong>Don Búho Sabio explica:</strong> «¡Bienvenido al norte de Bogotá, Rufino! Aquí en los humedales respiramos un aire limpio de $18.2\\,\\mu\\text{g}/\\text{m}^3$, pero en el sur la polución sube a $62.4\\,\\mu\\text{g}/\\text{m}^3$. Si promediamos los 19 sensores sin mirar el mapa, cometeremos un grave error estadístico».
+          <strong>Capítulo 1 — El Punto de Partida:</strong> «¡Hola Rufino! Todo buen vuelo comienza con una brújula científica. Nuestro proyecto nace del artículo <em>"Numerical cubature on scattered data by adaptive interpolation"</em> (Cavoretto, De Rossi &amp; Erb, 2024, <em>J. Comput. Appl. Math.</em>), que resuelve cómo calcular integrales 2D cuando solo tenemos datos sueltos».
         </div>
       </div>
 
       <div class="grid-2col">
         <div class="hud-panel">
           <div class="panel-header">
-            <span class="panel-title">¿Por qué Falla el Promedio Simple?</span>
-            <span class="panel-tag">RMCAB · 19 Sensores</span>
+            <span class="panel-title">¿Qué Resuelve el Artículo Original?</span>
+            <span class="panel-tag">Cavoretto et al. (2024)</span>
           </div>
           <p style="font-size: 0.83rem; line-height: 1.45;">
-            <strong>La analogía cotidiana:</strong> Imagina medir la temperatura de una casa con 10 termómetros dentro de la nevera ($4^\\circ\\text{C}$) y solo 1 junto a la chimenea ($200^\\circ\\text{C}$). El promedio diría que la casa está helada, ignorando el tamaño real de cada habitación.
+            En la vida real no tenemos una fórmula perfecta del terreno ni del aire, sino puntos dispersos $X = \\{\\mathbf{x}_1, \\dots, \\mathbf{x}_N\\}$. Para integrarlos sin conocer la función exacta, el artículo desacopla el problema en <strong>dos fases</strong>:
           </p>
-          <div class="math-box amber">
-            $$\\overline{C}_{\\text{arit}} = \\frac{1}{N}\\sum_{i=1}^{N} C_i = 33.50\\,\\mu\\text{g}/\\text{m}^3 \\quad \\neq \\quad \\overline{C}_{\\Omega} = \\frac{1}{\\operatorname{Area}(\\Omega)}\\iint_{\\Omega} C(x,y)\\,dx\\,dy = 31.93\\,\\mu\\text{g}/\\text{m}^3$$
-          </div>
-          <div style="background: #FFFFFF; border: 1px solid rgba(45,106,79,0.2); border-radius: 8px; padding: 8px 12px; font-size: 0.79rem; line-height: 1.45;">
-            <strong>Desglose de la Fórmula:</strong><br>
-            • $N = 19$: Número total de estaciones de monitoreo en la ciudad.<br>
-            • $C_i$: Concentración medida en la estación $i$ en microgramos por metro cúbico ($\\mu\\text{g}/\\text{m}^3$).<br>
-            • $\\overline{C}_{\\text{arit}}$: Promedio aritmético simple (asume falsamente que cada sensor cubre el mismo territorio).<br>
-            • $\\Omega$: Territorio geográfico de Bogotá encerrado por la red ($252.37\\,\\text{km}^2$).<br>
-            • $C(x,y)$: Concentración continua estimada en cualquier coordenada geográfica $(x,y)$.<br>
-            • $\\overline{C}_{\\Omega}$: Concentración media real ponderada por área (el valor ambiental científicamente correcto).
-          </div>
-          <div class="grid-3col" style="margin-top: 6px;">
-            <div class="metric-box">
-              <div class="metric-label">Mínimo (Norte)</div>
-              <div class="metric-value">18.2</div>
-              <div class="metric-sub">$\\mu\\text{g}/\\text{m}^3$ en Guaymaral</div>
-            </div>
-            <div class="metric-box">
-              <div class="metric-label">Promedio Simple</div>
-              <div class="metric-value amber">33.50</div>
-              <div class="metric-sub">Sobreestima $+4.7\\%$</div>
-            </div>
-            <div class="metric-box">
-              <div class="metric-label">Máximo (Sur)</div>
-              <div class="metric-value crimson">62.4</div>
-              <div class="metric-sub">$\\mu\\text{g}/\\text{m}^3$ en Carvajal</div>
-            </div>
+          <ul class="hud-list">
+            <li><strong>Fase 1 (Reconstrucción $S_f$):</strong> A partir de los nodos dispersos, construye una superficie continua aproximada $S_f(x,y)$ usando funciones de base radial (RBF) con partición de la unidad (PUM).</li>
+            <li><strong>Fase 2 (Cubatura Adaptativa):</strong> Divide el dominio en celdas y aplica dos reglas de cuadratura anidadas $(I_T, \\hat{I}_T)$. Si ambas difieren más que la tolerancia, subdivide la celda automáticamente.</li>
+          </ul>
+          <div class="math-box">
+            $$E(f) \\le \\underbrace{\\operatorname{Area}(\\Omega)\\,\\|f - S_f\\|_{\\infty,\\Omega}}_{\\text{Fase 1: Error de Interpolación } \\mathcal{O}(h_X^k)} + \\underbrace{\\left|\\iint_{\\Omega} S_f\\,dx\\,dy - \\sum_{T \\in \\mathcal{T}} I_T(S_f)\\right|}_{\\text{Fase 2: Error de Cubatura } \\mathcal{O}(h_{\\mathcal{T}}^p)}$$
           </div>
         </div>
 
         <div class="hud-panel">
           <div class="panel-header">
-            <span class="panel-title">El Desafío Numérico y los Ejes del Curso</span>
-            <span class="panel-tag cyan">Objetivo Central</span>
+            <span class="panel-title">¿Qué Significan los Parámetros y el Error Stalling?</span>
+            <span class="panel-tag amber">Hallazgo Teórico</span>
           </div>
-          <p style="font-size: 0.83rem; line-height: 1.45;">
-            <strong>El reto:</strong> No existe una fórmula matemática que nos diga la contaminación exacta en cada rincón de Bogotá; solo tenemos 19 lecturas dispersas en un territorio de $252.37\\,\\text{km}^2$.
+          <div style="background: #FFFFFF; border: 1px solid rgba(45,106,79,0.2); border-radius: 8px; padding: 9px 12px; font-size: 0.80rem; line-height: 1.48;">
+            <strong>Desglose de la Ecuación del Paper:</strong><br>
+            • $E(f)$: Error total entre la integral real y nuestra aproximación.<br>
+            • $\\|f - S_f\\|_{\\infty,\\Omega}$: Peor discrepancia entre la realidad $f$ y el modelo $S_f$.<br>
+            • $h_X$: Distancia de llenado (separación máxima entre puntos de datos), con orden $k$.<br>
+            • $h_{\\mathcal{T}}$: Tamaño de la celda de integración más grande, con orden $p$.<br>
+            • $I_T(S_f)$: Integral numérica evaluada sobre cada celda $T$.
+          </div>
+          <div class="math-box crimson" style="margin-top: 8px;">
+            <strong>El Fenómeno de <em>Error Stalling</em> (Estancamiento):</strong><br>
+            El paper demuestra que si refinamos la malla al infinito ($h_{\\mathcal{T}} \\to 0$), el segundo término desaparece, pero el error choca contra un piso fijo impuesto por los datos disponibles ($C_1 h_X^k$).
+          </div>
+          <p style="font-size: 0.81rem; color: var(--text-muted); line-height: 1.42; margin-top: 4px;">
+            <strong>La pregunta de investigación:</strong> El artículo prueba esto en cuadrados ideales $[0,1]^2$ con hasta $10\\,000$ puntos sintéticos. <em>¿Qué ocurre cuando lo llevamos a una ciudad real con solo 19 estaciones?</em>
           </p>
-          <ul class="hud-list">
-            <li><strong>1. Punto Flotante IEEE-754:</strong> Controlar la propagación de errores de redondeo al operar números en precisión doble (64 bits).</li>
-            <li><strong>2. Álgebra Lineal y Condicionamiento:</strong> Resolver mínimos cuadrados evitando matrices inestables (usando $QR$ de Householder en vez de $LU$).</li>
-            <li><strong>3. Interpolación 2D:</strong> Reconstruir una superficie continua mediante triángulos de Delaunay y el método de Shepard Modificado.</li>
-            <li><strong>4. Cubatura Adaptativa:</strong> Integrar sobre triángulos refinando la malla solo donde la contaminación cambia bruscamente.</li>
-          </ul>
         </div>
       </div>
     `
@@ -174,81 +161,71 @@ const WORLD_STOPS = [
     kind: 'structure',
     spriteType: 'greenhouse',
     icon: '🏛️',
-    name: '2. Invernadero del Jardín Botánico',
-    shortLabel: '2. Paper Base',
-    zoneName: 'Reserva del Jardín Botánico (Flora Andina)',
+    name: '2. Intro: Problema y Objetivos (Jardín)',
+    shortLabel: '2. Intro: Objetivos',
+    zoneName: 'FASE I · INTRODUCCIÓN · Jardín Botánico (23.9 µg/m³)',
     theme: 'nature',
     localPm10: '23.9 µg/m³',
-    title: 'Parada 2: Artículo Científico de Referencia (Cavoretto, De Rossi & Erb, 2024)',
+    title: 'Introducción (2/2): El Conflicto de los Datos en Bogotá y Nuestros Objetivos',
     renderHTML: () => `
       <div class="copeton-dialog-banner">
         <span style="font-size: 1.6rem;">🏛️</span>
         <div>
-          <strong>Bitácora Científica del Invernadero:</strong> «Fundamentamos nuestro motor en el paper: <em>"Numerical cubature on scattered data by adaptive interpolation"</em> (Cavoretto et al., 2024, <em>J. Comput. Appl. Math.</em>), adaptándolo de dominios matemáticos abstractos a la geografía real de Bogotá».
+          <strong>Capítulo 2 — El Conflicto en los Datos:</strong> «En el Jardín Botánico descubrimos la trampa: Bogotá mide su aire ($\text{PM}_{10}$) con apenas <strong>19 estaciones RMCAB</strong> sobre $252.37\\,\\text{km}^2$, pero están agrupadas en el norte limpio ($18.2\\,\\mu\\text{g}/\\text{m}^3$) y muy dispersas en el sur industrial ($62.4\\,\\mu\\text{g}/\\text{m}^3$). ¡El promedio simple miente!».
         </div>
       </div>
 
       <div class="grid-2col">
         <div class="hud-panel">
           <div class="panel-header">
-            <span class="panel-title">El Algoritmo en 2 Fases del Paper</span>
-            <span class="panel-tag">Estrategia Desacoplada</span>
+            <span class="panel-title">El Dato Revelador: La Falacia del Promedio</span>
+            <span class="panel-tag">RMCAB · 2023</span>
           </div>
           <p style="font-size: 0.83rem; line-height: 1.45;">
-            Como no podemos evaluar el aire en cualquier coordenada libremente, el paper divide el problema en dos pasos independientes:
+            <strong>Analogía cotidiana:</strong> Promediar 10 termómetros en una nevera ($4^\\circ\\text{C}$) y 1 en un horno ($200^\\circ\\text{C}$) diría que la casa está fría, ignorando cuánto espacio ocupa cada zona.
           </p>
-          <ul class="hud-list">
-            <li><strong>Fase 1 (Superficie Continua $S_f$):</strong> Con los 19 puntos dispersos, construimos una superficie suave que aproxima la concentración $C(x,y)$ en todo el mapa.</li>
-            <li><strong>Fase 2 (Cubatura Adaptativa en Triángulos):</strong> Cubrimos la ciudad con triángulos. En cada celda comparamos una regla rápida de Gauss (3 puntos) contra una de alta precisión (Radon-Dunavant, 7 puntos). Si discrepan más de la tolerancia $\\tau$, ¡el triángulo se corta en 4 partes más pequeñas!</li>
-          </ul>
-          <div class="math-box">
-            $$E(f) \\le \\underbrace{\\operatorname{Area}(\\Omega)\\,\\|f - S_f\\|_{\\infty,\\Omega}}_{\\text{Término 1: Error del Modelo (Fase 1) } \\mathcal{O}(h_X^k)} + \\underbrace{\\left|\\iint_{\\Omega} S_f\\,dx\\,dy - \\sum_{T \\in \\mathcal{T}} I_T(S_f)\\right|}_{\\text{Término 2: Error de Integración (Fase 2) } \\mathcal{O}(h_{\\mathcal{T}}^p)}$$
+          <div class="math-box amber">
+            $$\\overline{C}_{\\text{arit}} = \\frac{1}{N}\\sum_{i=1}^{N} C_i = 33.50\\,\\mu\\text{g}/\\text{m}^3 \\quad \\neq \\quad \\overline{C}_{\\Omega} = \\frac{1}{\\operatorname{Area}(\\Omega)}\\iint_{\\Omega} C(x,y)\\,dx\\,dy$$
           </div>
-          <div style="background: #FFFFFF; border: 1px solid rgba(45,106,79,0.2); border-radius: 8px; padding: 8px 12px; font-size: 0.79rem; line-height: 1.45;">
-            <strong>¿Qué significa cada término de esta cota de error?</strong><br>
-            • $E(f)$: Error total entre la masa de contaminación real y la calculada por el algoritmo.<br>
-            • $\\|f - S_f\\|_{\\infty,\\Omega}$: Máxima diferencia entre la realidad ambiental $f$ y la superficie estimada $S_f$.<br>
-            • $h_X$: Distancia de llenado (qué tan separados están los sensores entre sí). Orden de convergencia $k$.<br>
-            • $h_{\\mathcal{T}}$: Tamaño del triángulo más grande de la malla. Orden de precisión $p$.<br>
-            • $I_T(S_f)$: Regla de cubatura aplicada en el triángulo $T$.
+          <div style="background: #FFFFFF; border: 1px solid rgba(45,106,79,0.2); border-radius: 8px; padding: 7px 12px; font-size: 0.78rem; line-height: 1.42;">
+            • $N = 19$: Estaciones oficiales RMCAB.<br>
+            • $C_i$: Concentración de $\\text{PM}_{10}$ medida en la estación $i$ ($\\mu\\text{g}/\\text{m}^3$).<br>
+            • $\\Omega$: Dominio geográfico convexo de Bogotá ($252.37\\,\\text{km}^2$).<br>
+            • $\\overline{C}_{\\Omega}$: Concentración media real ponderada por el área territorial.
+          </div>
+          <div class="grid-3col" style="margin-top: 6px;">
+            <div class="metric-box">
+              <div class="metric-label">Mínimo (Norte)</div>
+              <div class="metric-value">18.2</div>
+              <div class="metric-sub">$\\mu\\text{g}/\\text{m}^3$ Guaymaral</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-label">Media Simple</div>
+              <div class="metric-value amber">33.50</div>
+              <div class="metric-sub">Sesgada al norte</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-label">Máximo (Sur)</div>
+              <div class="metric-value crimson">62.4</div>
+              <div class="metric-sub">$\\mu\\text{g}/\\text{m}^3$ Carvajal</div>
+            </div>
           </div>
         </div>
 
         <div class="hud-panel">
           <div class="panel-header">
-            <span class="panel-title">Comparativa y el Fenómeno de Error Stalling</span>
-            <span class="panel-tag amber">Concepto Clave</span>
+            <span class="panel-title">Objetivos del Proyecto Integrador</span>
+            <span class="panel-tag cyan">Hoja de Ruta</span>
           </div>
-          <table class="hud-table">
-            <thead>
-              <tr>
-                <th>Aspecto</th>
-                <th>Paper Original (2024)</th>
-                <th>Nuestra Aplicación en Bogotá</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Dominio $\\Omega$</strong></td>
-                <td>Cuadrado $[0,1]^2$ o disco con 1000 puntos sintéticos.</td>
-                <td>Polígono real de Bogotá ($252.37\\,\\text{km}^2$) con 19 estaciones.</td>
-              </tr>
-              <tr>
-                <td><strong>Fase 1 ($S_f$)</strong></td>
-                <td>Funciones RBF complejas en subdominios.</td>
-                <td>Baricéntrico $\\mathcal{P}_1$, Polinomios QR y Shepard Modificado.</td>
-              </tr>
-              <tr class="row-highlight">
-                <td><strong>Fase 2 ($I_T$)</strong></td>
-                <td>Bisección adaptativa sobre mallas regulares.</td>
-                <td>Triangulación de Delaunay con subdivisión 1:4 focalizada.</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="math-box crimson" style="margin-top: 6px;">
-            <strong>¿Qué es el Error Stalling (Estancamiento)?</strong><br>
-            Si refinamos los triángulos al infinito ($h_{\\mathcal{T}} \\to 0$), el segundo término desaparece. Sin embargo, el error total choca contra un piso fijo: <em>las 19 estaciones siguen siendo las mismas ($h_X$ no cambia)</em>. Subdividir más la malla no mejora la precisión si no instalamos más estaciones en tierra.
-          </div>
+          <p style="font-size: 0.83rem; line-height: 1.45;">
+            <strong>Objetivo General:</strong> Estimar de forma insesgada la densidad lineal vertical y la masa total de $\\text{PM}_{10}$ sobre Bogotá mediante cubatura adaptativa sobre datos dispersos, implementando todos los algoritmos numéricos desde cero.
+          </p>
+          <ul class="hud-list">
+            <li><strong>1. Geometría Real:</strong> Proyectar las 19 estaciones GPS a kilómetros planos y triangular el dominio $\\Omega_{\\text{Bog}}$ sin deformar áreas.</li>
+            <li><strong>2. Estabilidad Algebraica:</strong> Comparar Ecuaciones Normales ($LU$) frente a Factorización $QR$ de Householder bajo aritmética IEEE-754 de 64 bits.</li>
+            <li><strong>3. Validación Analítica:</strong> Verificar el orden empírico de convergencia ($p_k$) y el <em>Error Stalling</em> sobre la función de Franke (1979).</li>
+            <li><strong>4. Cubatura Adaptativa en Bogotá:</strong> Refinar selectivamente la malla en zonas de alta curvatura (Carvajal–Kennedy) y cuantificar la masa suspendida.</li>
+          </ul>
         </div>
       </div>
     `
@@ -260,66 +237,87 @@ const WORLD_STOPS = [
     kind: 'structure',
     spriteType: 'teleferico',
     icon: '🚠',
-    name: '3. Mirador de los Cerros Orientales',
-    shortLabel: '3. Dominio y Física',
-    zoneName: 'Pie de Monte · Cerros Orientales (2600 m s.n.m.)',
+    name: '3. Metodología: Cambio y Propuesta',
+    shortLabel: '3. Metodología',
+    zoneName: 'FASE II · METODOLOGÍA · Mirador Cerros Orientales (26.5 µg/m³)',
     theme: 'nature',
     localPm10: '26.5 µg/m³',
-    title: 'Parada 3: Geometría en Kilómetros y Significado Físico del Aire',
+    title: 'Metodología: Cambio Metodológico respecto al Paper y Nuestra Propuesta',
     renderHTML: () => `
       <div class="copeton-dialog-banner">
         <span style="font-size: 1.6rem;">🚠</span>
         <div>
-          <strong>Desde el Mirador de Monserrate:</strong> «¡Mira la panorámica de la Sabana, Rufino! Aquí convertimos los grados de latitud y longitud en kilómetros planos reales y le damos significado físico a la integral matemática».
+          <strong>Capítulo 3 — El Giro Metodológico:</strong> «Desde Monserrate vemos toda la ciudad. Para que el método de Cavoretto et al. (2024) funcione sobre las 19 estaciones reales de Bogotá y cumpla los pilares de Métodos Numéricos, realizamos <strong>5 cambios metodológicos clave</strong>».
         </div>
       </div>
 
       <div class="grid-2col">
         <div class="hud-panel">
           <div class="panel-header">
-            <span class="panel-title">1. Proyección Métrica en Kilómetros ($\\text{km}$)</span>
-            <span class="panel-tag">Geometría Plana</span>
+            <span class="panel-title">Cambio Metodológico: Paper (2024) vs. Nuestra Propuesta</span>
+            <span class="panel-tag">Adaptación Real</span>
           </div>
-          <p style="font-size: 0.83rem; line-height: 1.45;">
-            <strong>¿Por qué no usar grados GPS directamente?</strong> La Tierra es curva. En Bogotá ($\\varphi_0 = 4.65^\\circ\\text{N}$), $1^\\circ$ de longitud equivale a $110.95\\,\\text{km}$, pero $1^\\circ$ de latitud equivale a $110.57\\,\\text{km}$. Calcular áreas en grados cuadrados deformaría las distancias.
-          </p>
-          <div class="math-box">
-            $$x = (\\text{lon} - \\text{lon}_0)\\cdot 111.32\\cos(\\varphi_0)\\;[\\text{km}], \\qquad y = (\\text{lat} - \\text{lat}_0)\\cdot 110.57\\;[\\text{km}]$$
-          </div>
-          <div style="background: #FFFFFF; border: 1px solid rgba(45,106,79,0.2); border-radius: 8px; padding: 7px 12px; font-size: 0.78rem; line-height: 1.45;">
-            • $(\\text{lon}_0, \\text{lat}_0) = (-74.08, 4.65)$: Origen de coordenadas en el centro de Bogotá.<br>
-            • $\\varphi_0 = 4.65^\\circ\\text{N}$: Corrección del factor de escala longitudinal por el coseno de la latitud.<br>
-            • $(x, y)$: Coordenadas euclidianas planas en kilómetros exactos.
-          </div>
-          <p style="font-size: 0.82rem; line-height: 1.42; margin-top: 6px;">
-            Con los 19 puntos proyectados generamos 28 triángulos de Delaunay base. Su área se calcula exactamente por determinantes:
-          </p>
-          <div class="math-box">
-            $$\\operatorname{Area}(T) = \\frac{1}{2}\\Big|(x_b - x_a)(y_c - y_a) - (x_c - x_a)(y_b - y_a)\\Big| \\quad \\Longrightarrow \\quad \\sum_{T \\in \\mathcal{T}_0} \\operatorname{Area}(T) = 252.3700\\,\\text{km}^2$$
-          </div>
+          <table class="hud-table">
+            <thead>
+              <tr>
+                <th>Componente</th>
+                <th>Paper Original (2024)</th>
+                <th>Nuestra Propuesta (Bogotá)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. Dominio $\\Omega$</strong></td>
+                <td>Figuras sintéticas ($[0,1]^2$, disco) con $N \\ge 100$ puntos Halton.</td>
+                <td>Envolvente convexa real de Bogotá ($252.37\\,\\text{km}^2$) con $N=19$ sensores RMCAB.</td>
+              </tr>
+              <tr>
+                <td><strong>2. Coordenadas</strong></td>
+                <td>Adimensionales en $[0,1]^2$.</td>
+                <td><strong>Proyección métrica tangente</strong> a $\\text{km}$ planos ($\\varphi_0 = 4.65^\\circ\\text{N}$).</td>
+              </tr>
+              <tr>
+                <td><strong>3. Fase 1 ($S_f$)</strong></td>
+                <td>Partición de la Unidad con RBFs locales.</td>
+                <td><strong>Baricéntrico $\\mathcal{P}_1$</strong>, <strong>Polinomial QR</strong> y <strong>Shepard Modificado local</strong>.</td>
+              </tr>
+              <tr>
+                <td><strong>4. Solvers Lineales</strong></td>
+                <td>Asumidos estables sin análisis de $\\kappa$.</td>
+                <td><strong>QR de Householder</strong> con regla de Wilkinson (evita colapso de $LU$).</td>
+              </tr>
+              <tr class="row-highlight">
+                <td><strong>5. Fase 2 (Malla)</strong></td>
+                <td>Subdivisión sobre mallas estructuradas.</td>
+                <td><strong>Delaunay ($28$ celdas)</strong> + par anidado <strong>Gauss 3-pt / Dunavant 7-pt</strong> (subdivisión 1:4).</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <div class="hud-panel">
           <div class="panel-header">
-            <span class="panel-title">2. De la Integral a Toneladas de Polución</span>
-            <span class="panel-tag cyan">Física Ambiental</span>
+            <span class="panel-title">Propuesta Física y Geométrica (En Kilómetros)</span>
+            <span class="panel-tag cyan">Fórmulas Base</span>
           </div>
-          <p style="font-size: 0.83rem; line-height: 1.45;">
-            <strong>¿Qué significa integrar $\\mu\\text{g}/\\text{m}^3$ sobre $\\text{km}^2$?</strong> Ocurre una cancelación exacta de factores métricos:
+          <p style="font-size: 0.82rem; line-height: 1.42;">
+            <strong>1. Conversión GPS a Kilómetros Planos:</strong> Evita deformar áreas por la curvatura terrestre:
+          </p>
+          <div class="math-box">
+            $$x = (\\text{lon} - \\text{lon}_0)\\cdot 111.32\\cos(\\varphi_0)\\;[\\text{km}], \\quad y = (\\text{lat} - \\text{lat}_0)\\cdot 110.57\\;[\\text{km}]$$
+          </div>
+          <p style="font-size: 0.82rem; line-height: 1.42;">
+            <strong>2. Significado Físico de la Integral (Cancelación Dimensional):</strong>
           </p>
           <div class="math-box amber">
-            $$\\left[\\iint_{\\Omega} C(x,y)\\,dx\\,dy\\right] = \\left(\\frac{10^{-6}\\,\\text{g}}{\\text{m}^3}\\right)\\cdot\\left(10^6\\,\\text{m}^2\\right) = \\frac{\\text{g}}{\\text{m}} \\quad (\\text{Densidad Lineal Vertical})$$
+            $$\\left[\\iint_{\\Omega} C(x,y)\\,dx\\,dy\\right] = \\left(\\frac{10^{-6}\\,\\text{g}}{\\text{m}^3}\\right)\\cdot\\left(10^6\\,\\text{m}^2\\right) = \\frac{\\text{g}}{\\text{m}} \\;\\Longrightarrow\\; M_{\\text{total}} = I_{\\Omega}\\cdot H_{\\text{mix}}$$
           </div>
-          <div style="background: #FFFFFF; border: 1px solid rgba(45,106,79,0.2); border-radius: 8px; padding: 7px 12px; font-size: 0.78rem; line-height: 1.45;">
-            • $1\\,\\mu\\text{g} = 10^{-6}\\,\\text{g}$: Conversión de microgramos a gramos.<br>
-            • $1\\,\\text{km}^2 = 10^6\\,\\text{m}^2$: Conversión de kilómetros cuadrados a metros cuadrados.<br>
-            • Resultado físico: $10^{-6} \\times 10^6 = 1$. ¡Los factores se anulan y la integral entrega directamente gramos por metro!
+          <div style="background: #FFFFFF; border: 1px solid rgba(45,106,79,0.2); border-radius: 8px; padding: 7px 12px; font-size: 0.78rem; line-height: 1.42;">
+            • $(\\text{lon}_0, \\text{lat}_0) = (-74.08, 4.65)$: Centro de referencia en Bogotá.<br>
+            • $10^{-6}\\times 10^6 = 1$: Microgramos y $\\text{km}^2$ se cancelan exactamente a gramos por metro.<br>
+            • $I_{\\Omega}$: Densidad lineal vertical ($\text{g}$ de $\\text{PM}_{10}$ por cada metro de altura).<br>
+            • $H_{\\text{mix}}$: Altura de la capa de mezcla atmosférica (típica $1000\\,\\text{m}$).
           </div>
-          <ul class="hud-list" style="margin-top: 6px;">
-            <li><strong>Densidad Lineal Vertical ($I_{\\Omega} = 8058.59\\,\\text{g}/\\text{m}$):</strong> Significa que en todo el cielo de Bogotá hay <strong>$8.06\\,\\text{kg}$ de partículas por cada metro de altura vertical</strong>.</li>
-            <li><strong>Masa Total en la Capa de Mezcla ($M_{\\text{total}} = I_{\\Omega}\\cdot H_{\\text{mix}}$):</strong>
-              Para una altura de inversión típica de $H_{\\text{mix}} = 1000\\,\\text{m}$, flotan <strong>$8.06\\,\\text{toneladas}$ ($8058.6\\,\\text{kg}$)</strong> de $\\text{PM}_{10}$ suspendidas sobre la ciudad.</li>
-          </ul>
         </div>
       </div>
     `
@@ -331,49 +329,43 @@ const WORLD_STOPS = [
     kind: 'friend',
     spriteType: 'hummingbird',
     icon: '🐦',
-    name: '4. Colibrí del Laboratorio Numérico',
-    shortLabel: '4. Estabilidad QR vs LU',
-    zoneName: 'Transición Chapinero · Barrios de Ladrillo',
+    name: '4. Resultados: Álgebra QR vs LU',
+    shortLabel: '4. Res: QR vs LU',
+    zoneName: 'FASE III · RESULTADOS (1/3) · Chapinero (31.5 µg/m³)',
     theme: 'urban',
     localPm10: '31.5 µg/m³',
-    title: 'Parada 4: Duelo de Estabilidad — QR de Householder vs. Ecuaciones Normales LU',
+    title: 'Resultados (1/3): Estabilidad Numérica — QR de Householder vs. Ecuaciones Normales LU',
     hasChart: 'stability',
     renderHTML: () => `
       <div class="copeton-dialog-banner">
         <span style="font-size: 1.6rem;">🐦</span>
         <div>
-          <strong>Chispita el Colibrí Calculista dice:</strong> «¡Ya entramos a los edificios de Chapinero, Rufino! Para ajustar una superficie suave por mínimos cuadrados debemos resolver un sistema lineal. ¡Aquí demostramos por qué el método clásico de LU falla catastróficamente en un computador!».
+          <strong>Capítulo 4 — El Hallazgo en Álgebra Lineal:</strong> «Al probar ajustes polinomiales para la Fase 1, nos topamos con un obstáculo crítico de la computación en 64 bits: el método clásico de Ecuaciones Normales ($LU$) colapsa en grado 4, mientras $QR$ de Householder permanece exacto».
         </div>
       </div>
 
       <div class="grid-2col">
         <div class="hud-panel">
           <div class="panel-header">
-            <span class="panel-title">¿Por qué Colapsan las Ecuaciones Normales ($A^T A$)?</span>
-            <span class="panel-tag crimson">Inestabilidad en 64 bits</span>
+            <span class="panel-title">Fórmulas, Tabla de Condicionamiento y Solución</span>
+            <span class="panel-tag crimson">IEEE-754 (64 bits)</span>
           </div>
-          <p style="font-size: 0.83rem; line-height: 1.45;">
-            Para ajustar un polinomio de grado $m$ con $M = \\frac{(m+1)(m+2)}{2}$ coeficientes, el método clásico plantea $(A^T A)\\mathbf{c} = A^T\\mathbf{y}$. Pero al multiplicar $A^T A$, el número de condición $\\kappa$ <strong>se eleva al cuadrado</strong>:
-          </p>
           <div class="math-box crimson">
-            $$\\kappa_2(A^T A) = \\big(\\kappa_2(A)\\big)^2 \\;\\;\\text{frente a}\\;\\; \\text{Reflectores QR de Householder: } H_k = I - 2\\frac{\\mathbf{v}_k\\mathbf{v}_k^T}{\\mathbf{v}_k^T\\mathbf{v}_k}$$
-            $$v_1 = x_1 + \\operatorname{sign}(x_1)\\|\\mathbf{x}\\|_2 \\quad (\\text{Regla de signo de Wilkinson: cero cancelación})$$
+            $$\\kappa_2(A^T A) = \\big(\\kappa_2(A)\\big)^2 \\quad \\text{vs.} \\quad H_k = I - 2\\frac{\\mathbf{v}_k\\mathbf{v}_k^T}{\\mathbf{v}_k^T\\mathbf{v}_k}, \\quad v_1 = x_1 + \\operatorname{sign}(x_1)\\|\\mathbf{x}\\|_2$$
           </div>
-          <div style="background: #FFFFFF; border: 1px solid rgba(220,38,38,0.2); border-radius: 8px; padding: 7px 12px; font-size: 0.78rem; line-height: 1.45;">
-            <strong>Desglose de Parámetros:</strong><br>
-            • $\\kappa_2(A)$: Número de condición espectral. Mide qué tanto se amplifican los errores en la solución.<br>
-            • $A^T A$: Matriz de Ecuaciones Normales (eleva $\\kappa$ al cuadrado; en grado 4 pasa de $5.36\\times 10^4$ a $8.79\\times 10^{20}$).<br>
-            • $H_k$: Matriz ortogonal de Householder que refleja los vectores sin alterar sus longitudes ni elevar $\\kappa$.<br>
-            • $\\operatorname{sign}(x_1)$: Regla de Wilkinson que evita restar dos números casi iguales (cancelación catastrófica).
+          <div style="background: #FFFFFF; border: 1px solid rgba(220,38,38,0.2); border-radius: 8px; padding: 6px 11px; font-size: 0.77rem; line-height: 1.42;">
+            • $\\kappa_2(A)$: Número de condición (amplificación de errores).<br>
+            • $A^T A$: Ecuaciones Normales; eleva $\\kappa$ al cuadrado hasta superar el límite de $10^{16}$ de 64 bits.<br>
+            • $H_k$: Reflector ortogonal de Householder con regla de signo de Wilkinson ($\\operatorname{sign}(x_1)$) que evita restar números casi iguales.
           </div>
           <table class="hud-table" style="margin-top: 6px;">
             <thead>
               <tr>
                 <th>Grado $m$</th>
-                <th>Condición QR $\\kappa_2(A)$</th>
-                <th>Condición LU $\\kappa_2(A^T A)$</th>
-                <th>Error en Solución</th>
-                <th>Diagnóstico IEEE-754</th>
+                <th>$\\kappa_2(A)$ (QR)</th>
+                <th>$\\kappa_2(A^T A)$ (LU)</th>
+                <th>Deriva $\\|\\mathbf{c}_{QR}-\\mathbf{c}_{LU}\\|_2$</th>
+                <th>Diagnóstico</th>
               </tr>
             </thead>
             <tbody>
@@ -382,28 +374,28 @@ const WORLD_STOPS = [
                 <td>$1.49 \\times 10^1$</td>
                 <td>$2.23 \\times 10^2$</td>
                 <td>$2.31 \\times 10^{-14}$</td>
-                <td class="text-emerald">Estable en ambos</td>
+                <td class="text-emerald">Estable</td>
               </tr>
               <tr>
                 <td><strong>$m=2$</strong></td>
                 <td>$1.87 \\times 10^2$</td>
                 <td>$3.48 \\times 10^4$</td>
                 <td>$1.94 \\times 10^{-11}$</td>
-                <td class="text-emerald">QR exacto; LU pierde 4 dígitos</td>
+                <td class="text-emerald">LU pierde 4 dígitos</td>
               </tr>
               <tr>
                 <td><strong>$m=3$</strong></td>
                 <td>$3.06 \\times 10^3$</td>
                 <td>$9.39 \\times 10^6$</td>
                 <td>$5.05 \\times 10^{-8}$</td>
-                <td class="text-amber">LU pierde la mitad de precisión</td>
+                <td class="text-amber">LU pierde 8 dígitos</td>
               </tr>
               <tr class="row-danger">
                 <td><strong>$m=4$</strong></td>
                 <td>$5.36 \\times 10^4$</td>
                 <td><strong>$8.79 \\times 10^{20}$</strong></td>
                 <td><strong>$4.00 \\times 10^2$</strong></td>
-                <td class="text-crimson"><strong>Colapso de LU ($> 10^{16}$ límite de 64 bits)</strong></td>
+                <td class="text-crimson"><strong>Colapso de LU ($> 10^{16}$)</strong></td>
               </tr>
             </tbody>
           </table>
@@ -411,14 +403,14 @@ const WORLD_STOPS = [
 
         <div class="hud-panel">
           <div class="panel-header">
-            <span class="panel-title">Gráfica Interactiva: Explosión de Condición</span>
-            <span class="panel-tag cyan">Límite de Máquina</span>
+            <span class="panel-title">Gráfica: Explosión de $\\kappa_2(A^T A)$ vs. Estabilidad QR</span>
+            <span class="panel-tag cyan">Evidencia Visual</span>
           </div>
           <div id="stability-chart-container" style="min-height: 250px; width: 100%;">
             ${typeof Charts !== 'undefined' ? Charts.getStabilitySVG() : ''}
           </div>
-          <p style="font-size: 0.81rem; color: var(--text-muted); line-height: 1.42; margin-top: 4px;">
-            <strong>Decisión clave:</strong> En grado 4, $\\kappa_2(A^T A) = 8.79\\times 10^{20}$ rebasa los 16 dígitos de precisión de un computador ($1/\\varepsilon_{\\text{mach}} \\approx 4.5\\times 10^{15}$), generando basura numérica en LU. Por eso implementamos <strong>exclusivamente QR de Householder</strong> y usamos <strong>Shepard Modificado local</strong>.
+          <p style="font-size: 0.80rem; color: var(--text-muted); line-height: 1.42; margin-top: 4px;">
+            <strong>Solución adoptada:</strong> Implementamos exclusivamente <strong>QR de Householder</strong> para ajustes polinomiales y usamos <strong>Shepard Modificado local</strong> en la Fase 1 para evitar oscilaciones globales.
           </p>
         </div>
       </div>
@@ -431,47 +423,43 @@ const WORLD_STOPS = [
     kind: 'structure',
     spriteType: 'balloon',
     icon: '🎈',
-    name: '5. Globo Meteorológico de Teusaquillo',
-    shortLabel: '5. Franke y Stalling',
-    zoneName: 'Corredor Central · Teusaquillo y Puente Aranda',
+    name: '5. Resultados: Franke y Stalling',
+    shortLabel: '5. Res: Franke',
+    zoneName: 'FASE III · RESULTADOS (2/3) · Corredor Central (39.4 µg/m³)',
     theme: 'urban',
     localPm10: '39.4 µg/m³',
-    title: 'Parada 5: Benchmark de Franke, Orden Empírico (EOC) y Error Stalling',
+    title: 'Resultados (2/3): Benchmark de Franke, Orden Empírico (EOC) y Error Stalling',
     hasChart: 'franke',
     renderHTML: () => `
       <div class="copeton-dialog-banner">
         <span style="font-size: 1.6rem;">🎈</span>
         <div>
-          <strong>Sonda Atmosférica de Validación:</strong> «Para estar seguros de que el algoritmo no tiene errores de programación, primero probamos con la función analítica estándar de <strong>Franke (1979)</strong>, cuya integral exacta es perfectamente conocida: $I_{\\text{exact}} = 0.404343099291993$».
+          <strong>Capítulo 5 — La Prueba de Fuego en Datos Conocidos:</strong> «Antes de aplicar el motor a Bogotá, lo auditamos con la función analítica de <strong>Franke (1979)</strong> ($I_{\\text{exact}} = 0.404343099291993$). El experimento confirma tanto la alta velocidad de Radon-Dunavant como el <em>Error Stalling</em> del paper».
         </div>
       </div>
 
       <div class="grid-2col">
         <div class="hud-panel">
           <div class="panel-header">
-            <span class="panel-title">Orden Empírico de Convergencia ($p_k$)</span>
-            <span class="panel-tag">Validación Matemática</span>
+            <span class="panel-title">Fórmula de Convergencia ($p_k$) y Tabla Comparativa</span>
+            <span class="panel-tag">Benchmark Franke</span>
           </div>
-          <p style="font-size: 0.82rem; line-height: 1.42;">
-            El orden empírico mide qué tan rápido cae el error cada vez que subdividimos los triángulos a la mitad ($h_k = h_{k-1}/2$):
-          </p>
           <div class="math-box">
             $$p_k = \\frac{\\ln(E_{k-1}/E_k)}{\\ln(h_{k-1}/h_k)} = \\log_2\\!\\left(\\frac{E_{k-1}}{E_k}\\right) \\quad \\text{cuando } h_k = \\frac{h_{k-1}}{2}$$
           </div>
-          <div style="background: #FFFFFF; border: 1px solid rgba(45,106,79,0.2); border-radius: 8px; padding: 7px 12px; font-size: 0.78rem; line-height: 1.45;">
-            <strong>Definición de Parámetros:</strong><br>
-            • $E_k$: Error relativo de integración en el nivel de refinamiento $k$.<br>
-            • $h_k$: Tamaño característico de los triángulos en el nivel $k$ ($h_k = h_{k-1}/2$ por subdivisión 1:4).<br>
-            • $p_k$: Pendiente logarítmica de convergencia. Si $p_k = 2$, el error baja $4\\times$; si $p_k = 5$, ¡el error baja $32\\times$!
+          <div style="background: #FFFFFF; border: 1px solid rgba(45,106,79,0.2); border-radius: 8px; padding: 6px 11px; font-size: 0.77rem; line-height: 1.42;">
+            • $E_k$: Error relativo de integración en el nivel $k$.<br>
+            • $h_k$: Tamaño de triángulo en el nivel $k$ (se parte a la mitad en cada subdivisión 1:4).<br>
+            • $p_k$: Velocidad de convergencia (orden $5$ reduce el error $32\\times$ por nivel).
           </div>
           <table class="hud-table" style="margin-top: 6px;">
             <thead>
               <tr>
-                <th>Nivel $k$ (Triángulos)</th>
-                <th>Error Función Exacta</th>
-                <th>Orden $p_k$ Exacto</th>
-                <th>Error con $N=19$ Sensores</th>
-                <th>Orden $p_k$ con 19 Sensores</th>
+                <th>Nivel $k$ (Celdas)</th>
+                <th>Error Exacta</th>
+                <th>EOC $p_k$</th>
+                <th>Error $N=19$</th>
+                <th>EOC ($N=19$)</th>
               </tr>
             </thead>
             <tbody>
@@ -505,21 +493,21 @@ const WORLD_STOPS = [
               </tr>
             </tbody>
           </table>
-          <p style="font-size: 0.80rem; line-height: 1.4; margin-top: 4px;">
-            <strong>Frente a Monte Carlo 2D ($\\mathcal{O}(K^{-1/2})$):</strong> Para lograr un error de $0.02$, Monte Carlo requiere $5000$ evaluaciones aleatorias; nuestra cubatura logra la misma precisión con solo <strong>$196$ puntos ($25\\times$ más eficiente)</strong>.
+          <p style="font-size: 0.79rem; line-height: 1.4; margin-top: 4px;">
+            <strong>Vs. Monte Carlo 2D ($\\mathcal{O}(K^{-1/2})$):</strong> Logramos un error de $0.02$ con <strong>$25\\times$ menos evaluaciones</strong> ($196$ puntos vs. $5000$ aleatorios).
           </p>
         </div>
 
         <div class="hud-panel">
           <div class="panel-header">
-            <span class="panel-title">Demostración Visual del Estancamiento</span>
-            <span class="panel-tag amber">Hallazgo de Cavoretto (2024)</span>
+            <span class="panel-title">Gráfica: Convergencia vs. Piso de Error Stalling</span>
+            <span class="panel-tag amber">Evidencia Visual</span>
           </div>
           <div id="franke-chart-container" style="min-height: 250px; width: 100%;">
             ${typeof Charts !== 'undefined' ? Charts.getFrankeSVG() : ''}
           </div>
-          <p style="font-size: 0.81rem; color: var(--text-muted); line-height: 1.42; margin-top: 4px;">
-            <strong>¿Qué vemos en la gráfica?</strong> Al integrar la función exacta (azul), el error cae vertiginosamente a $10^{-9}$ con orden $p_k \\approx 5.7$. Pero con 19 estaciones fijas (ámbar), la curva se aplana en $1.28\\times 10^{-2}$: el error se estanca porque no hay más datos en el mapa.
+          <p style="font-size: 0.80rem; color: var(--text-muted); line-height: 1.42; margin-top: 4px;">
+            <strong>Lectura de la historia en los datos:</strong> La curva azul cae hasta $10^{-9}$ ($p_k \\approx 5.7$), pero al fijar $N=19$ estaciones (ámbar) la curva se aplana en $1.28\\times 10^{-2}$ ($p_k \\to 0$): demostramos el límite físico impuesto por la red.
           </p>
         </div>
       </div>
@@ -532,13 +520,13 @@ const WORLD_STOPS = [
     kind: 'structure',
     spriteType: 'control_tower',
     icon: '🛰️',
-    name: '6. Torre de Control Urbano (SIMULADOR)',
-    shortLabel: '6. Simulador en Vivo',
-    zoneName: 'Corazón Urbano e Industrial · Carvajal - Kennedy',
+    name: '6. Resultados: Simulador Bogotá',
+    shortLabel: '6. Res: Simulador',
+    zoneName: 'FASE III · RESULTADOS (3/3) · Carvajal - Kennedy (62.4 µg/m³)',
     theme: 'urban',
     localPm10: '62.4 µg/m³',
     isSimulator: true,
-    title: 'Parada 6: Simulador Interactivo de Cubatura Adaptativa en Bogotá (RMCAB)'
+    title: 'Resultados (3/3): Solución sobre Bogotá en Vivo — Simulador de Cubatura Adaptativa'
   },
   {
     id: 'stop-7',
@@ -547,77 +535,77 @@ const WORLD_STOPS = [
     kind: 'friend',
     spriteType: 'tingua',
     icon: '🦆',
-    name: '7. La Tingua Azul del Parque Metropolitano',
+    name: '7. Conclusiones y Pasos a Futuro',
     shortLabel: '7. Conclusiones y Futuro',
-    zoneName: 'Parque Metropolitano Simón Bolívar (Restauración)',
+    zoneName: 'FASE IV · CONCLUSIONES · Parque Simón Bolívar (24.8 µg/m³)',
     theme: 'nature',
     localPm10: '24.8 µg/m³',
-    title: 'Parada 7: Validación con Librerías Científicas, Conclusiones y Pasos a Futuro',
+    title: 'Conclusiones y Pasos a Futuro: Validación Científica, Hallazgos y Hoja de Ruta',
     renderHTML: () => `
       <div class="copeton-dialog-banner">
         <span style="font-size: 1.6rem;">🦆</span>
         <div>
-          <strong>Doña Tingua Azul dice:</strong> «¡Salimos de la nube gris de Carvajal hacia el lago del Parque Simón Bolívar, Rufino! Aquí contrastamos nuestros algoritmos hechos desde cero contra librerías científicas mundiales y resumimos las conclusiones».
+          <strong>Capítulo 7 — El Desenlace del Viaje:</strong> «Al dejar atrás la nube de Carvajal y llegar al Parque Simón Bolívar, cerramos el ciclo: validamos nuestro código frente a librerías científicas globales y definimos el camino hacia el futuro».
         </div>
       </div>
 
       <div class="grid-2col">
         <div class="hud-panel">
           <div class="panel-header">
-            <span class="panel-title">Validación Cruzada contra SciPy y Sensibilidad</span>
-            <span class="panel-tag">Precisión de Máquina</span>
+            <span class="panel-title">Validación de Precisión y Sensibilidad Final</span>
+            <span class="panel-tag">Auditoría Técnica</span>
           </div>
-          <p style="font-size: 0.83rem; line-height: 1.45;">
-            Para certificar que no introdujimos sesgos en el código propio, contrastamos nuestro interpolador baricéntrico $\\mathcal{P}_1$ contra <code>matplotlib.tri.LinearTriInterpolator</code> y <code>scipy.spatial.Delaunay</code>:
-          </p>
           <div class="grid-2col" style="margin: 4px 0;">
             <div class="metric-box">
-              <div class="metric-label">Diferencia vs. SciPy</div>
+              <div class="metric-label">Diferencia vs. SciPy / Matplotlib</div>
               <div class="metric-value">2.13 × 10⁻¹³</div>
-              <div class="metric-sub">Coincidencia exacta a 13 decimales</div>
+              <div class="metric-sub">Exactitud a precisión de máquina (13 decimales)</div>
             </div>
             <div class="metric-box">
-              <div class="metric-label">Corrección del Sesgo</div>
+              <div class="metric-label">Sesgo Corregido en Bogotá</div>
               <div class="metric-value cyan">31.93 vs 33.50</div>
-              <div class="metric-sub">$-4.69\\%$ de sobreestimación evitada</div>
+              <div class="metric-sub">$-4.69\\%$ de sobreestimación eliminada</div>
             </div>
           </div>
           <table class="hud-table">
             <thead>
               <tr>
-                <th>Parámetro Evaluado</th>
-                <th>Rango de Prueba</th>
-                <th>Concentración Media $\\overline{C}_{\\Omega}$</th>
-                <th>Impacto en el Resultado</th>
+                <th>Hiperparámetro</th>
+                <th>Rango Evaluado</th>
+                <th>Media $\\overline{C}_{\\Omega}$</th>
+                <th>Estabilidad</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong>Radio de Shepard ($R$)</strong></td>
-                <td>$9.0\\,\\text{km} \\to 18.0\\,\\text{km}$</td>
+                <td><strong>Radio Shepard ($R$)</strong></td>
+                <td>$9.0 \\to 18.0\\,\\text{km}$</td>
                 <td>$31.68 \\to 32.19\\,\\mu\\text{g}/\\text{m}^3$</td>
-                <td class="text-emerald">Variación mínima ($< 1.6\\%$, muy estable)</td>
+                <td class="text-emerald">Variación $< 1.6\\%$</td>
               </tr>
               <tr class="row-highlight">
-                <td><strong>Tolerancia Adaptativa ($\\tau$)</strong></td>
-                <td>$\\tau=50 \\to \\tau=8$ ($28 \\to 205$ celdas)</td>
+                <td><strong>Tolerancia ($\\tau$)</strong></td>
+                <td>$50 \\to 8$ ($28 \\to 205$ celdas)</td>
                 <td>$32.12 \\to 31.98\\,\\mu\\text{g}/\\text{m}^3$</td>
-                <td class="text-emerald">Convergencia rápida en $< 1\\,\\text{ms}$</td>
+                <td class="text-emerald">Converge en $< 1\\,\\text{ms}$</td>
               </tr>
             </tbody>
           </table>
+          <div class="math-box" style="margin-top: 6px;">
+            <strong>Balance Final ($H_{\\text{mix}} = 1000\\,\\text{m}$):</strong> $I_{\\Omega} = 8058.59\\,\\text{g}/\\text{m} \\implies \\mathbf{8.06\\,\\text{toneladas}}$ de $\\text{PM}_{10}$ flotando sobre $252.37\\,\\text{km}^2$.
+          </div>
         </div>
 
         <div class="hud-panel">
           <div class="panel-header">
-            <span class="panel-title">3 Conclusiones Clave y Trabajo Futuro</span>
-            <span class="panel-tag cyan">Lecciones del Proyecto</span>
+            <span class="panel-title">Conclusiones Clave y Pasos a Futuro</span>
+            <span class="panel-tag cyan">Cierre y Proyección</span>
           </div>
           <ul class="hud-list">
-            <li><strong>1. El Álgebra Lineal es Vital:</strong> QR de Householder con regla de Wilkinson evitó la explosión de $\\kappa_2 = 8.79\\times 10^{20}$, garantizando que el computador no entregue números corruptos.</li>
-            <li><strong>2. El Teorema de Gauss en la Práctica:</strong> Las superficies polinómicas de grado $\\le 2$ no necesitan subdividirse porque la regla de Gauss de 3 puntos tiene grado de precisión exacto 2. En Shepard Modificado, la malla subdivide selectivamente hasta 205 celdas solo en el foco industrial de <strong>Carvajal–Kennedy</strong>.</li>
-            <li><strong>3. La Gran Conclusión de Error Stalling:</strong> Con 19 estaciones, la limitación no es computacional sino de datos ($C_1 h_X^k$). Refinar la malla al infinito no sirve si no aumentamos la cantidad de sensores en tierra.</li>
-            <li><strong>Pasos a Futuro:</strong> (a) Integrar covariables de viento y altura topográfica; (b) Incorporar sensores ciudadanos de bajo costo para reducir $h_X$; y (c) Extender a cubatura espacio-temporal 3D $(x,y,t)$ hora a hora.</li>
+            <li><strong>Conclusión 1 (Álgebra Lineal):</strong> La factorización $QR$ de Householder con regla de Wilkinson es indispensable para evitar el colapso numérico ($\\kappa_2 = 8.79\\times 10^{20}$ de $LU$).</li>
+            <li><strong>Conclusión 2 (Teorema de Gauss):</strong> Los métodos polinomiales de grado $\\le 2$ se integran exactamente en $28$ celdas base, mientras Shepard Modificado refina selectivamente hasta $205$ celdas sobre el foco industrial de <strong>Carvajal–Kennedy</strong>.</li>
+            <li><strong>Conclusión 3 (Frontera de Datos):</strong> Por el fenómeno de <em>Error Stalling</em>, con $19$ estaciones fijas el error ya no baja refinando triángulos, sino ampliando la red de sensores.</li>
+            <li><strong>Pasos a Futuro:</strong> (1) Integrar covariables topográficas y dirección de vientos; (2) Incorporar sensores ciudadanos de bajo costo para reducir $h_X$; y (3) Extender el motor a cubatura espacio-temporal 3D $(x,y,t)$ hora a hora.</li>
           </ul>
         </div>
       </div>
@@ -630,12 +618,12 @@ const WORLD_STOPS = [
     kind: 'nest',
     spriteType: 'nest',
     icon: '🪺',
-    name: '8. El Gran Nido del Copetón',
+    name: '8. Cierre: El Gran Nido del Copetón',
     shortLabel: '8. Nido Final',
-    zoneName: 'Bosque Altoandino de Despedida · El Nido de Rufino',
+    zoneName: 'EPÍLOGO · Bosque Altoandino · El Nido de Rufino',
     theme: 'nest',
     localPm10: '16.5 µg/m³',
-    title: '¡Llegaste al Nido de Rufino! — Cierre de la Presentación',
+    title: '¡Llegaste al Nido de Rufino! — Síntesis Final y Despedida',
     renderHTML: () => `
       <div style="text-align: center; padding: 10px 18px;">
         <div style="font-size: 3.4rem; margin-bottom: 6px;">🐦🪺🌿</div>
@@ -643,38 +631,35 @@ const WORLD_STOPS = [
           ¡Misión Cumplida sobre el Cielo de Bogotá!
         </h2>
         <p style="font-size: 0.95rem; color: var(--text-muted); max-width: 740px; margin: 0 auto 18px auto; line-height: 1.5;">
-          Rufino ha regresado sano y salvo a su nido tras recorrer los $252.37\\,\\text{km}^2$ de Bogotá, demostrando cómo los <strong>Métodos Numéricos</strong> transforman $19$ mediciones dispersas en información ambiental rigurosa para proteger la salud de millones de personas.
+          Rufino ha recorrido las 4 fases de esta historia de datos —desde el artículo original y la propuesta metodológica hasta los resultados en vivo y conclusiones—, demostrando cómo los <strong>Métodos Numéricos</strong> convierten $19$ mediciones dispersas en evidencia ambiental para proteger la salud pública.
         </p>
 
         <div class="grid-3col" style="text-align: left; margin-bottom: 18px;">
           <div class="hud-panel">
             <div class="panel-header">
-              <span class="panel-title">Resultados Ambientales</span>
-              <span class="panel-tag">Balance RMCAB</span>
+              <span class="panel-title">1. Introducción y Metodología</span>
+              <span class="panel-tag">Del Paper a Bogotá</span>
             </div>
             <p style="font-size: 0.82rem; line-height: 1.48;">
-              • <strong>Media Simple Sesgada:</strong> $33.50\\,\\mu\\text{g}/\\text{m}^3$<br>
-              • <strong>Media Cubatura Ponderada:</strong> $31.93\\,\\mu\\text{g}/\\text{m}^3$<br>
-              • <strong>Densidad Lineal:</strong> $8058.59\\,\\text{g}/\\text{m}$ ($8.06\\,\\text{kg}/\\text{m}$)<br>
-              • <strong>Masa en $H_{\\text{mix}}=1\\,\\text{km}$:</strong> $8.06\\,\\text{toneladas}$ de $\\text{PM}_{10}$
+              • <strong>Base:</strong> Cavoretto, De Rossi &amp; Erb (2024).<br>
+              • <strong>Cambio clave:</strong> Proyección métrica en $\\text{km}$ ($252.37\\,\\text{km}^2$), malla Delaunay y Shepard Modificado local.
             </p>
           </div>
 
           <div class="hud-panel">
             <div class="panel-header">
-              <span class="panel-title">Rigor Numérico</span>
-              <span class="panel-tag cyan">Sin Cajas Negras</span>
+              <span class="panel-title">2. Resultados y Solución</span>
+              <span class="panel-tag cyan">Evidencia Numérica</span>
             </div>
             <p style="font-size: 0.82rem; line-height: 1.48;">
-              • <strong>QR de Householder:</strong> Condición estable vs colapso de LU ($\\kappa_2 = 8.79\\times 10^{20}$).<br>
-              • <strong>Cubatura 2D:</strong> Par anidado Gauss (3 pts) / Radon-Dunavant (7 pts).<br>
-              • <strong>Validación:</strong> $2.13\\times 10^{-13}$ frente a SciPy.
+              • <strong>Estabilidad:</strong> Householder QR vs. colapso LU ($\\kappa_2 = 8.79\\times 10^{20}$).<br>
+              • <strong>Bogotá:</strong> Media insesgada $31.93\\,\\mu\\text{g}/\\text{m}^3$ ($-4.69\\%$) y masa de $8.06\\,\\text{ton}$ en $H_{\\text{mix}}=1\\,\\text{km}$.
             </p>
           </div>
 
           <div class="hud-panel">
             <div class="panel-header">
-              <span class="panel-title">Equipo Investigador</span>
+              <span class="panel-title">3. Equipo Investigador</span>
               <span class="panel-tag amber">Ing. de Sistemas</span>
             </div>
             <p style="font-size: 0.82rem; line-height: 1.48;">
