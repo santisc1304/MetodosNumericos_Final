@@ -15662,3 +15662,10 @@ const BOGOTA_DATA = {
     "arithmetic_mean": 33.5
   }
 };
+
+if (typeof window !== 'undefined') {
+  window.BOGOTA_DATA = BOGOTA_DATA;
+}
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = BOGOTA_DATA;
+}

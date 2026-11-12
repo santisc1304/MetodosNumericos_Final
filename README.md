@@ -89,3 +89,4 @@ pip install numpy scipy matplotlib pandas
 python src/run_final_delivery.py
 ```
 O abrir y ejecutar `entrega_final_metodos_numericos.ipynb` fijando la semilla `seed = 42`.
+

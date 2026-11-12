@@ -8,7 +8,7 @@
 const Charts = (() => {
 
   function getStabilitySVG() {
-    const data = (window.BOGOTA_DATA && window.BOGOTA_DATA.stability) ? window.BOGOTA_DATA.stability : [
+    const data = (typeof window !== 'undefined' && window.BOGOTA_DATA && window.BOGOTA_DATA.stability) ? window.BOGOTA_DATA.stability : [
       { degree: 1, terms: 3, kappa_qr: 866, kappa_lu: 749000 },
       { degree: 2, terms: 6, kappa_qr: 678000, kappa_lu: 460000000000 },
       { degree: 3, terms: 10, kappa_qr: 405000000, kappa_lu: 1.59e17 },
@@ -109,7 +109,7 @@ const Charts = (() => {
   }
 
   function getFrankeSVG() {
-    const franke = (window.BOGOTA_DATA && window.BOGOTA_DATA.franke) ? window.BOGOTA_DATA.franke : {
+    const franke = (typeof window !== 'undefined' && window.BOGOTA_DATA && window.BOGOTA_DATA.franke) ? window.BOGOTA_DATA.franke : {
       uniform: [
         { evals: 14, err_rel: 0.00169 },
         { evals: 56, err_rel: 0.000766 },
@@ -244,4 +244,7 @@ const Charts = (() => {
 
 if (typeof window !== 'undefined') {
   window.Charts = Charts;
+}
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = Charts;
 }

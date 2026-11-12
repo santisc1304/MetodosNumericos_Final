@@ -286,16 +286,22 @@ const GameEngine = (() => {
       const simBackdrop = document.getElementById('simulator-modal-backdrop');
       simBackdrop.classList.add('active');
 
-      setTimeout(() => {
+      const refreshSimulator = () => {
         if (typeof Simulator !== 'undefined') {
           Simulator.resizeCanvas();
           Simulator.updateTelemetry();
           Simulator.render();
         }
-        if (window.MathJax && window.MathJax.typesetPromise) {
-          window.MathJax.typesetPromise([simBackdrop]).catch(() => {});
-        }
-      }, 60);
+      };
+
+      refreshSimulator();
+      setTimeout(refreshSimulator, 50);
+      setTimeout(refreshSimulator, 180);
+      setTimeout(refreshSimulator, 350);
+
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise([simBackdrop]).catch(() => {});
+      }
       return;
     }
 

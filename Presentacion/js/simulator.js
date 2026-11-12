@@ -7,34 +7,77 @@
 const Simulator = (() => {
   let canvas, ctx;
   let currentMethod = 'mshep';
-  let currentTol = '15.0';
-  let currentHmix = 500; // metros
+  let currentTol = '8.0'; // Valor por defecto correspondiente al slider
+  let currentHmix = 1000; // metros (estándar capa de mezcla)
   let hoveredStation = null;
+  let initialized = false;
+
+  function getBogotaData() {
+    if (typeof window !== 'undefined' && window.BOGOTA_DATA) return window.BOGOTA_DATA;
+    if (typeof BOGOTA_DATA !== 'undefined') return BOGOTA_DATA;
+    return null;
+  }
 
   function init() {
     canvas = document.getElementById('bogota-mesh-canvas');
-    if (!canvas || !window.BOGOTA_DATA) return;
+    const data = getBogotaData();
+    if (!canvas || !data) return;
     ctx = canvas.getContext('2d');
 
     setupEventListeners();
     resizeCanvas();
+    render();
+    updateTelemetry();
+
+    const wrapper = canvas.parentElement;
+    if (typeof ResizeObserver !== 'undefined' && wrapper) {
+      const ro = new ResizeObserver(() => {
+        resizeCanvas();
+        render();
+      });
+      ro.observe(wrapper);
+    }
+
     window.addEventListener('resize', () => {
       resizeCanvas();
       render();
     });
 
-    render();
+    initialized = true;
   }
 
   function resizeCanvas() {
-    if (!canvas || !ctx) return;
+    if (!canvas) canvas = document.getElementById('bogota-mesh-canvas');
+    if (!canvas) return;
+    if (!ctx) ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
     const wrapper = canvas.parentElement;
-    if (!wrapper) return;
-    const rect = wrapper.getBoundingClientRect();
-    if (rect.width === 0 || rect.height === 0) return;
+    let w = 0, h = 0;
+    if (wrapper) {
+      const rect = wrapper.getBoundingClientRect();
+      w = rect.width;
+      h = rect.height;
+      if (!w || !h) {
+        w = wrapper.clientWidth;
+        h = wrapper.clientHeight;
+      }
+    }
+    if (!w || !h) {
+      const canvasRect = canvas.getBoundingClientRect();
+      w = canvasRect.width;
+      h = canvasRect.height;
+    }
+
+    // Dimensiones de seguridad si el modal aún no se ha desplegado por completo
+    if (!w || w < 100) w = 600;
+    if (!h || h < 100) h = 460;
+
     const dpr = window.devicePixelRatio || 1;
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    canvas.style.width = `${Math.round(w)}px`;
+    canvas.style.height = `${Math.round(h)}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
@@ -43,7 +86,7 @@ const Simulator = (() => {
     if (methodSelect) {
       methodSelect.addEventListener('change', (e) => {
         currentMethod = e.target.value;
-        Telemetry.playBlip(680, 'triangle', 0.04);
+        if (typeof Telemetry !== 'undefined') Telemetry.playBlip(680, 0.04);
         updateTelemetry();
         render();
       });
@@ -54,9 +97,12 @@ const Simulator = (() => {
     if (tolSlider) {
       tolSlider.addEventListener('input', (e) => {
         const valMap = ['50.0', '30.0', '20.0', '15.0', '8.0'];
-        currentTol = valMap[parseInt(e.target.value, 10)];
-        if (tolLabel) tolLabel.textContent = `${currentTol} µg/m³`;
-        Telemetry.playBlip(780 + parseInt(e.target.value) * 50, 'sine', 0.03);
+        currentTol = valMap[parseInt(e.target.value, 10)] || '8.0';
+        if (tolLabel) {
+          const names = { '50.0': 'τ = 50 (Gruesa)', '30.0': 'τ = 30', '20.0': 'τ = 20', '15.0': 'τ = 15', '8.0': 'τ = 8 (Malla Fina)' };
+          tolLabel.textContent = names[currentTol] || `τ = ${currentTol}`;
+        }
+        if (typeof Telemetry !== 'undefined') Telemetry.playBlip(780 + parseInt(e.target.value) * 50, 0.03);
         updateTelemetry();
         render();
       });
@@ -68,18 +114,20 @@ const Simulator = (() => {
       hmixSlider.addEventListener('input', (e) => {
         currentHmix = parseInt(e.target.value, 10);
         if (hmixLabel) hmixLabel.textContent = `${currentHmix} m`;
-        Telemetry.playBlip(550 + (currentHmix / 12), 'sine', 0.02);
+        if (typeof Telemetry !== 'undefined') Telemetry.playBlip(550 + (currentHmix / 12), 0.02);
         updateTelemetry();
       });
     }
 
     canvas.addEventListener('mousemove', (e) => {
+      const data = getBogotaData();
+      if (!data) return;
+
       const rect = canvas.getBoundingClientRect();
       const mouseX = e.clientX - rect.left;
       const mouseY = e.clientY - rect.top;
 
-      const data = BOGOTA_DATA;
-      const tform = getCoordTransform(rect.width, rect.height);
+      const tform = getCoordTransform(rect.width || 600, rect.height || 460);
 
       let found = null;
       for (const st of data.stations) {
@@ -93,7 +141,7 @@ const Simulator = (() => {
 
       if (found !== hoveredStation) {
         hoveredStation = found;
-        if (found) Telemetry.playBlip(950, 'sine', 0.03);
+        if (found && typeof Telemetry !== 'undefined') Telemetry.playBlip(950, 0.03);
         render();
       }
     });
@@ -107,13 +155,21 @@ const Simulator = (() => {
   }
 
   function getCoordTransform(width, height) {
-    const bounds = BOGOTA_DATA.bounds;
-    const margin = 36;
-    const spanX = bounds.max_x - bounds.min_x;
-    const spanY = bounds.max_y - bounds.min_y;
+    const data = getBogotaData();
+    const bounds = (data && data.bounds) || {
+      min_x: -7.345, max_x: 7.712,
+      min_y: -13.32, max_y: 14.87
+    };
 
-    const scaleX = (width - margin * 2) / spanX;
-    const scaleY = (height - margin * 2) / spanY;
+    const margin = 28;
+    const spanX = Math.max(1, bounds.max_x - bounds.min_x);
+    const spanY = Math.max(1, bounds.max_y - bounds.min_y);
+
+    const availW = Math.max(60, width - margin * 2);
+    const availH = Math.max(60, height - margin * 2);
+
+    const scaleX = availW / spanX;
+    const scaleY = availH / spanY;
     const scale = Math.min(scaleX, scaleY);
 
     const midX = (bounds.min_x + bounds.max_x) / 2;
@@ -127,33 +183,51 @@ const Simulator = (() => {
   }
 
   function render() {
-    if (!canvas || !ctx) return;
-    const rect = canvas.getBoundingClientRect();
-    const w = rect.width;
-    const h = rect.height;
+    if (!canvas) canvas = document.getElementById('bogota-mesh-canvas');
+    if (!canvas) return;
+    if (!ctx) ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-    ctx.clearRect(0, 0, w, h);
+    const data = getBogotaData();
+    if (!data) return;
 
-    const data = BOGOTA_DATA;
+    const dpr = window.devicePixelRatio || 1;
+    let w = canvas.width / dpr;
+    let h = canvas.height / dpr;
+
+    if (w < 80 || h < 80) {
+      resizeCanvas();
+      w = canvas.width / dpr;
+      h = canvas.height / dpr;
+    }
+    if (w < 80 || h < 80) return;
+
+    // Limpieza completa en coordenadas nativas del canvas
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.restore();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
     const tform = getCoordTransform(w, h);
 
     // 1. Silueta ambiental de fondo (Cerros Orientales al oriente)
     ctx.save();
-    ctx.fillStyle = 'rgba(45, 106, 79, 0.04)';
+    ctx.fillStyle = 'rgba(45, 106, 79, 0.05)';
     ctx.beginPath();
-    ctx.ellipse(w * 0.78, h * 0.45, w * 0.25, h * 0.48, 0.2, 0, Math.PI * 2);
+    ctx.ellipse(w * 0.76, h * 0.46, w * 0.22, h * 0.46, 0.2, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
 
     // 2. Dibujar Malla de Triángulos
-    const methodMeta = data.methods[currentMethod];
+    const methodMeta = data.methods[currentMethod] || data.methods['mshep'];
     let trianglesToDraw = [];
 
     if (methodMeta.subdivides) {
-      const levelData = data.mesh_levels[currentTol] || data.mesh_levels['15.0'];
-      trianglesToDraw = levelData.triangles;
+      const levelData = data.mesh_levels[currentTol] || data.mesh_levels['8.0'] || data.mesh_levels['15.0'];
+      trianglesToDraw = (levelData && levelData.triangles) ? levelData.triangles : [];
     } else {
-      trianglesToDraw = data.base_triangles.map(t => {
+      trianglesToDraw = (data.base_triangles || []).map(t => {
         const p0 = data.stations[t[0]];
         const p1 = data.stations[t[1]];
         const p2 = data.stations[t[2]];
@@ -189,7 +263,7 @@ const Simulator = (() => {
         // Enfoque crítico urbano en Carvajal (Ladrillo y ámbar)
         ctx.fillStyle = 'rgba(200, 90, 50, 0.28)';
         ctx.strokeStyle = '#C85A32';
-        ctx.lineWidth = 1.1;
+        ctx.lineWidth = 1.15;
       }
 
       ctx.fill();
@@ -217,51 +291,58 @@ const Simulator = (() => {
       ctx.lineWidth = 2.0;
       ctx.stroke();
 
-      // Halo de calor para Carvajal
+      // Halo de alerta para Carvajal (foco crítico)
       if (isCarvajal) {
         ctx.beginPath();
         ctx.arc(px, py, 13, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(200, 90, 50, 0.55)';
-        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = 'rgba(200, 90, 50, 0.6)';
+        ctx.lineWidth = 1.6;
         ctx.stroke();
       }
 
       // Etiquetas destacadas
       if (isCarvajal || isUsaquen || isKennedy || isMochuelo || (hoveredStation && hoveredStation.name === st.name)) {
-        ctx.font = '600 9.5px "Inter", sans-serif';
+        ctx.font = '600 10px "Outfit", sans-serif';
         ctx.fillStyle = '#0D2319';
         const label = `${st.name.split(' ')[0]} (${st.pm10} µg/m³)`;
         ctx.fillText(label, px + 8, py - 4);
       }
     });
 
-    // 4. Tooltip Flotante
+    // 4. Tooltip Flotante al pasar el cursor
     if (hoveredStation) {
       const [hx, hy] = tform(hoveredStation.x, hoveredStation.y);
       ctx.fillStyle = '#FFFFFF';
       ctx.strokeStyle = '#2D6A4F';
       ctx.lineWidth = 1.5;
-      const tipW = 165, tipH = 48;
+      const tipW = 175, tipH = 50;
+
       ctx.beginPath();
-      ctx.roundRect(hx + 10, hy - 42, tipW, tipH, 6);
+      if (ctx.roundRect) {
+        ctx.roundRect(hx + 10, hy - 44, tipW, tipH, 6);
+      } else {
+        ctx.rect(hx + 10, hy - 44, tipW, tipH);
+      }
       ctx.fill();
       ctx.stroke();
 
       ctx.fillStyle = '#1B4332';
-      ctx.font = '700 10px "Outfit", sans-serif';
-      ctx.fillText(hoveredStation.name, hx + 18, hy - 26);
+      ctx.font = '700 10.5px "Outfit", sans-serif';
+      ctx.fillText(hoveredStation.name, hx + 18, hy - 28);
 
       ctx.fillStyle = '#4B6358';
-      ctx.font = '600 9px "Inter", sans-serif';
-      ctx.fillText(`PM10: ${hoveredStation.pm10} µg/m³`, hx + 18, hy - 13);
+      ctx.font = '600 9.5px "Inter", sans-serif';
+      ctx.fillText(`PM10: ${hoveredStation.pm10} µg/m³`, hx + 18, hy - 14);
       ctx.fillText(`(x: ${hoveredStation.x.toFixed(1)} km, y: ${hoveredStation.y.toFixed(1)} km)`, hx + 18, hy - 1);
     }
   }
 
   function updateTelemetry() {
-    const data = BOGOTA_DATA;
-    const methodMeta = data.methods[currentMethod];
-    const levelData = data.mesh_levels[currentTol] || data.mesh_levels['15.0'];
+    const data = getBogotaData();
+    if (!data) return;
+
+    const methodMeta = data.methods[currentMethod] || data.methods['mshep'];
+    const levelData = data.mesh_levels[currentTol] || data.mesh_levels['8.0'] || data.mesh_levels['15.0'];
 
     let meanConc = methodMeta.mean_conc;
     let integralVal = methodMeta.integral;
@@ -269,7 +350,7 @@ const Simulator = (() => {
     let evalsCount = methodMeta.evals;
     let timeMs = methodMeta.time_ms;
 
-    if (methodMeta.subdivides) {
+    if (methodMeta.subdivides && levelData) {
       meanConc = levelData.mean_value;
       integralVal = levelData.integral;
       cellsCount = levelData.n_triangles;
@@ -313,4 +394,14 @@ const Simulator = (() => {
   };
 })();
 
-document.addEventListener('DOMContentLoaded', Simulator.init);
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', Simulator.init);
+}
+
+if (typeof window !== 'undefined') {
+  window.Simulator = Simulator;
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = Simulator;
+}
