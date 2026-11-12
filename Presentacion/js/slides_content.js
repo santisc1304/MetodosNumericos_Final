@@ -320,6 +320,27 @@ const WORLD_STOPS = [
           </div>
         </div>
       </div>
+
+      <div class="hud-panel" style="margin-top: 12px; background: linear-gradient(90deg, #F0FDF4 0%, #FFFFFF 100%); border-color: rgba(45, 106, 79, 0.35);">
+        <div class="panel-header" style="margin-bottom: 6px;">
+          <span class="panel-title">💎 Propuesta de Valor: ¿Por qué nuestra metodología genera valor real?</span>
+          <span class="panel-tag">Impacto Real</span>
+        </div>
+        <div class="grid-3col">
+          <div style="font-size: 0.79rem; line-height: 1.42;">
+            <strong style="color: var(--green-deep);">1. Decisión Pública sin Sesgo</strong><br>
+            Reemplaza promedios engañosos por la <strong>masa física real (toneladas)</strong> y la exposición territorial justa ($-4.69\\%$ de sesgo corregido) para alertas ambientales confiables.
+          </div>
+          <div style="font-size: 0.79rem; line-height: 1.42;">
+            <strong style="color: #0369A1;">2. Cómputo Inteligente (25× más eficiente)</strong><br>
+            En lugar de gastar memoria en toda la ciudad, el mallado adaptativo 1:4 concentra precisión quirúrgica solo en el foco crítico (<strong>Carvajal–Kennedy</strong>).
+          </div>
+          <div style="font-size: 0.79rem; line-height: 1.42;">
+            <strong style="color: #B45309;">3. Cero Cajas Negras y Alta Estabilidad</strong><br>
+            Blindamos el algoritmo frente a fallos de 64 bits (IEEE-754) con <strong>Householder QR</strong>, funcionando incluso con una red escasa de solo $19$ sensores.
+          </div>
+        </div>
+      </div>
     `
   },
   {
