@@ -383,6 +383,10 @@ const Simulator = (() => {
       } else {
         elTheoremPill.innerHTML = `<strong>SUBDIVISIÓN ADAPTATIVA 1:4:</strong> Shepard Modificado detecta la fuerte curvatura de emisiones en Carvajal-Kennedy. El estimador local $|Q_5 - Q_2| > \\tau$ detecta el cambio brusco y subdivide la malla hasta <strong>${cellsCount} celdas</strong> concentradas en el foco industrial.`;
       }
+      if (typeof window !== 'undefined' && window.MathJax && window.MathJax.typesetPromise) {
+        if (window.MathJax.typesetClear) window.MathJax.typesetClear([elTheoremPill]);
+        window.MathJax.typesetPromise([elTheoremPill]).catch(() => {});
+      }
     }
   }
 

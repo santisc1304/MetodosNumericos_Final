@@ -345,6 +345,9 @@ const GameEngine = (() => {
     // Tipografía LaTeX con MathJax
     setTimeout(() => {
       if (window.MathJax && window.MathJax.typesetPromise) {
+        if (window.MathJax.typesetClear) {
+          window.MathJax.typesetClear([bodyEl]);
+        }
         window.MathJax.typesetPromise([bodyEl]).catch(() => {});
       }
     }, 50);

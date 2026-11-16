@@ -117,7 +117,7 @@ const WORLD_STOPS = [
             <span class="panel-tag">Cavoretto et al. (2024)</span>
           </div>
           <p style="font-size: 0.83rem; line-height: 1.45;">
-            <strong>El reto en la vida real:</strong> No existe una fórmula matemática que nos diga la contaminación en cada rincón de una ciudad; solo tenemos sensores dispersos $X = \{\mathbf{x}_1, \dots, \mathbf{x}_N\}$. Para calcular la masa total sin conocer la fórmula exacta, el artículo divide el problema en <strong>dos fases muy intuitivas</strong>:
+            <strong>El reto en la vida real:</strong> No existe una fórmula matemática que nos diga la contaminación en cada rincón de una ciudad; solo tenemos sensores dispersos $X = \\{\\mathbf{x}_1, \\dots, \\mathbf{x}_N\\}$. Para calcular la masa total sin conocer la fórmula exacta, el artículo divide el problema en <strong>dos fases muy intuitivas</strong>:
           </p>
           <ul class="hud-list">
             <li><strong>Fase 1 (Construir una 'Sábana Continua' $S_f$):</strong> Con los pocos puntos conocidos, genera una superficie suave que une las alturas de contaminación de toda la ciudad.</li>
@@ -139,18 +139,18 @@ const WORLD_STOPS = [
           <div style="background: #FFFFFF; border: 1px solid rgba(45,106,79,0.2); border-radius: 8px; padding: 8px 12px; font-size: 0.80rem; line-height: 1.48;">
             <strong>¿Qué significa cada símbolo en la fórmula?</strong><br>
             • $E(f)$: Discrepancia total entre la contaminación real y nuestra estimación.<br>
-            • $\operatorname{Area}(\Omega)$: Superficie geográfica analizada ($252.37\,\text{km}^2$ en Bogotá).<br>
-            • $\|f - S_f\|_{\infty,\Omega}$: La peor diferencia en toda la ciudad entre la realidad y la sábana estimada.<br>
+            • $\\operatorname{Area}(\\Omega)$: Superficie geográfica analizada ($252.37\\,\\text{km}^2$ en Bogotá).<br>
+            • $\\|f - S_f\\|_{\\infty,\\Omega}$: La peor diferencia en toda la ciudad entre la realidad y la sábana estimada.<br>
             • $h_X$: Distancia máxima entre los sensores físicos disponibles en el terreno.<br>
-            • $h_{\mathcal{T}}$: Tamaño del triángulo más grande usado para hacer la integración.<br>
+            • $h_{\\mathcal{T}}$: Tamaño del triángulo más grande usado para hacer la integración.<br>
             • $I_T(S_f)$: La cantidad de partículas calculada dentro de cada triángulo individual $T$.
           </div>
           <div class="math-box crimson" style="margin-top: 8px;">
             <strong>El Hallazgo Clave: Error Stalling (Techo de Cristal):</strong><br>
-            El artículo demuestra matemáticamente que aunque dividas los triángulos en pedazos microscópicos ($h_{\mathcal{T}} \to 0$), el error total no puede bajar de cierto límite ($C_1 h_X^k$). ¡La precisión final depende de cuántos sensores pusiste en tierra!
+            El artículo demuestra matemáticamente que aunque dividas los triángulos en pedazos microscópicos ($h_{\\mathcal{T}} \\to 0$), el error total no puede bajar de cierto límite ($C_1 h_X^k$). ¡La precisión final depende de cuántos sensores pusiste en tierra!
           </div>
           <p style="font-size: 0.81rem; color: var(--text-muted); line-height: 1.42; margin-top: 4px;">
-            <strong>Nuestra pregunta de investigación:</strong> El paper probó esto con datos sintéticos en un cuadrado ideal de $1 \times 1$. <em>¿Qué ocurre cuando lo aplicamos a una ciudad real como Bogotá con solo 19 estaciones?</em>
+            <strong>Nuestra pregunta de investigación:</strong> El paper probó esto con datos sintéticos en un cuadrado ideal de $1 \\times 1$. <em>¿Qué ocurre cuando lo aplicamos a una ciudad real como Bogotá con solo 19 estaciones?</em>
           </p>
         </div>
       </div>
@@ -173,7 +173,7 @@ const WORLD_STOPS = [
       <div class="copeton-dialog-banner">
         <span style="font-size: 1.6rem;">🏛️</span>
         <div>
-          <strong>Capítulo 2 — El Conflicto en los Datos:</strong> «En el Jardín Botánico descubrimos la trampa: Bogotá vigila su calidad del aire ($\text{PM}_{10}$) con apenas <strong>19 estaciones oficiales</strong> repartidas en $252.37\,\text{km}^2$. Pero muchas están agrupadas en el norte limpio y muy pocas en el sur industrial. ¡Un promedio simple distorsiona la realidad!».
+          <strong>Capítulo 2 — El Conflicto en los Datos:</strong> «En el Jardín Botánico descubrimos la trampa: Bogotá vigila su calidad del aire ($\\text{PM}_{10}$) con apenas <strong>19 estaciones oficiales</strong> repartidas en $252.37\\,\\text{km}^2$. Pero muchas están agrupadas en el norte limpio y muy pocas en el sur industrial. ¡Un promedio simple distorsiona la realidad!».
         </div>
       </div>
 
@@ -184,22 +184,22 @@ const WORLD_STOPS = [
             <span class="panel-tag">RMCAB · 2023</span>
           </div>
           <p style="font-size: 0.83rem; line-height: 1.45;">
-            <strong>Analogía cotidiana:</strong> Imagina que pones 10 termómetros en una nevera a $3^\circ\text{C}$ y 1 solo termómetro en un horno encendido a $200^\circ\text{C}$. Si sacas el promedio simple, te dará $21^\circ\text{C}$ (temperatura agradable), ¡mientras el horno se incendia! En Bogotá ocurre lo mismo con las estaciones de aire.
+            <strong>Analogía cotidiana:</strong> Imagina que pones 10 termómetros en una nevera a $3^\\circ\\text{C}$ y 1 solo termómetro en un horno encendido a $200^\\circ\\text{C}$. Si sacas el promedio simple, te dará $21^\\circ\\text{C}$ (temperatura agradable), ¡mientras el horno se incendia! En Bogotá ocurre lo mismo con las estaciones de aire.
           </p>
           <div class="math-box amber">
-            $$\overline{C}_{\text{arit}} = \frac{1}{N}\sum_{i=1}^{N} C_i = 33.50\,\mu\text{g}/\text{m}^3 \quad \neq \quad \overline{C}_{\Omega} = \frac{1}{\operatorname{Area}(\Omega)}\iint_{\Omega} C(x,y)\,dx\,dy$$
+            $$\\overline{C}_{\\text{arit}} = \\frac{1}{N}\\sum_{i=1}^{N} C_i = 33.50\\,\\mu\\text{g}/\\text{m}^3 \\quad \\neq \\quad \\overline{C}_{\\Omega} = \\frac{1}{\\operatorname{Area}(\\Omega)}\\iint_{\\Omega} C(x,y)\\,dx\\,dy$$
           </div>
           <div style="background: #FFFFFF; border: 1px solid rgba(45,106,79,0.2); border-radius: 8px; padding: 7px 12px; font-size: 0.78rem; line-height: 1.42;">
             • $N = 19$: Número de estaciones oficiales de monitoreo en Bogotá.<br>
-            • $C_i$: Concentración leída por la estación $i$ en microgramos por metro cúbico ($\mu\text{g}/\text{m}^3$).<br>
-            • $\Omega$: Polígono territorial real que abarca a Bogotá ($252.37\,\text{km}^2$).<br>
-            • $\overline{C}_{\Omega}$: Concentración media verdadera, donde cada zona pesa según los kilómetros cuadrados que ocupa.
+            • $C_i$: Concentración leída por la estación $i$ en microgramos por metro cúbico ($\\mu\\text{g}/\\text{m}^3$).<br>
+            • $\\Omega$: Polígono territorial real que abarca a Bogotá ($252.37\\,\\text{km}^2$).<br>
+            • $\\overline{C}_{\\Omega}$: Concentración media verdadera, donde cada zona pesa según los kilómetros cuadrados que ocupa.
           </div>
           <div class="grid-3col" style="margin-top: 6px;">
             <div class="metric-box">
               <div class="metric-label">Mínimo (Norte)</div>
               <div class="metric-value">18.2</div>
-              <div class="metric-sub">$\mu\text{g}/\text{m}^3$ Guaymaral</div>
+              <div class="metric-sub">$\\mu\\text{g}/\\text{m}^3$ Guaymaral</div>
             </div>
             <div class="metric-box">
               <div class="metric-label">Promedio Simple</div>
@@ -209,7 +209,7 @@ const WORLD_STOPS = [
             <div class="metric-box">
               <div class="metric-label">Máximo (Sur)</div>
               <div class="metric-value crimson">62.4</div>
-              <div class="metric-sub">$\mu\text{g}/\text{m}^3$ Carvajal</div>
+              <div class="metric-sub">$\\mu\\text{g}/\\text{m}^3$ Carvajal</div>
             </div>
           </div>
         </div>
@@ -269,14 +269,14 @@ const WORLD_STOPS = [
             </thead>
             <tbody>
               <tr>
-                <td><strong>1. Territorio ($\Omega$)</strong></td>
+                <td><strong>1. Territorio ($\\Omega$)</strong></td>
                 <td>Cuadrado ideal $[0,1]^2$ con cientos de puntos sintéticos.</td>
-                <td>Mapa real de Bogotá ($252.37\,\text{km}^2$) con $19$ sensores físicos.</td>
+                <td>Mapa real de Bogotá ($252.37\\,\\text{km}^2$) con $19$ sensores físicos.</td>
               </tr>
               <tr>
                 <td><strong>2. Coordenadas</strong></td>
                 <td>Números abstractos sin unidades.</td>
-                <td><strong>Proyección métrica a kilómetros planos</strong> ($\phi_0 = 4.65^\circ\text{N}$).</td>
+                <td><strong>Proyección métrica a kilómetros planos</strong> ($\\phi_0 = 4.65^\\circ\\text{N}$).</td>
               </tr>
               <tr>
                 <td><strong>3. Sábana (Fase 1)</strong></td>
@@ -306,18 +306,18 @@ const WORLD_STOPS = [
             <strong>1. Proyección GPS a Kilómetros Planos:</strong> Convierte latitud y longitud a kilómetros reales para medir distancias exactas sobre Bogotá:
           </p>
           <div class="math-box">
-            $$x = (\text{lon} - \text{lon}_0)\cdot 111.32\cos(\varphi_0)\;[\text{km}], \quad y = (\text{lat} - \text{lat}_0)\cdot 110.57\;[\text{km}]$$
+            $$x = (\\text{lon} - \\text{lon}_0)\\cdot 111.32\\cos(\\varphi_0)\\;[\\text{km}], \\quad y = (\\text{lat} - \\text{lat}_0)\\cdot 110.57\\;[\\text{km}]$$
           </div>
           <p style="font-size: 0.82rem; line-height: 1.42;">
             <strong>2. Cancelación Matemática de Unidades:</strong> Al integrar la concentración sobre los kilómetros cuadrados, las unidades se cancelan de forma exacta:
           </p>
           <div class="math-box amber">
-            $$\left[\iint_{\Omega} C(x,y)\,dx\,dy\right] = \left(\frac{10^{-6}\,\text{g}}{\text{m}^3}\right)\cdot\left(10^6\,\text{m}^2\right) = \frac{\text{g}}{\text{m}} \;\Longrightarrow\; M_{\text{total}} = I_{\Omega}\cdot H_{\text{mix}}$$
+            $$\\left[\\iint_{\\Omega} C(x,y)\\,dx\\,dy\\right] = \\left(\\frac{10^{-6}\\,\\text{g}}{\\text{m}^3}\\right)\\cdot\\left(10^6\\,\\text{m}^2\\right) = \\frac{\\text{g}}{\\text{m}} \\;\\Longrightarrow\\; M_{\\text{total}} = I_{\\Omega}\\cdot H_{\\text{mix}}$$
           </div>
           <div style="background: #FFFFFF; border: 1px solid rgba(45,106,79,0.2); border-radius: 8px; padding: 7px 12px; font-size: 0.78rem; line-height: 1.42;">
-            • $(\text{lon}_0, \text{lat}_0) = (-74.08, 4.65)$: Coordenada de origen en el centro de Bogotá.<br>
-            • $10^{-6} \times 10^6 = 1$: Los microgramos y los kilómetros cuadrados se convierten exactamente en <strong>gramos por cada metro de altura</strong> ($I_{\Omega}$).<br>
-            • $H_{\text{mix}}$: Altura del aire respirable (capa de mezcla atmosférica, típicamente $1000\,\text{m}$). Al multiplicarla, ¡obtenemos la masa en toneladas!
+            • $(\\text{lon}_0, \\text{lat}_0) = (-74.08, 4.65)$: Coordenada de origen en el centro de Bogotá.<br>
+            • $10^{-6} \\times 10^6 = 1$: Los microgramos y los kilómetros cuadrados se convierten exactamente en <strong>gramos por cada metro de altura</strong> ($I_{\\Omega}$).<br>
+            • $H_{\\text{mix}}$: Altura del aire respirable (capa de mezcla atmosférica, típicamente $1000\\,\\text{m}$). Al multiplicarla, ¡obtenemos la masa en toneladas!
           </div>
         </div>
       </div>
@@ -330,7 +330,7 @@ const WORLD_STOPS = [
         <div class="grid-3col">
           <div style="font-size: 0.79rem; line-height: 1.42;">
             <strong style="color: var(--green-deep);">1. Decisiones Ambientales Justas</strong><br>
-            Sustituye promedios engañosos por la <strong>masa real de contaminante (toneladas)</strong>, corrigiendo un sesgo del $-4.69\%$ para emitir alertas ambientales oportunas.
+            Sustituye promedios engañosos por la <strong>masa real de contaminante (toneladas)</strong>, corrigiendo un sesgo del $-4.69\\%$ para emitir alertas ambientales oportunas.
           </div>
           <div style="font-size: 0.79rem; line-height: 1.42;">
             <strong style="color: #0369A1;">2. Eficiencia Inteligente (25× más rápido)</strong><br>
@@ -373,20 +373,20 @@ const WORLD_STOPS = [
             <span class="panel-tag crimson">Precisión de 64 bits</span>
           </div>
           <div class="math-box crimson">
-            $$\kappa_2(A^T A) = \big(\kappa_2(A)\big)^2 \quad \text{vs.} \quad H_k = I - 2\frac{\mathbf{v}_k\mathbf{v}_k^T}{\mathbf{v}_k^T\mathbf{v}_k}, \quad v_1 = x_1 + \operatorname{sign}(x_1)\|\mathbf{x}\|_2$$
+            $$\\kappa_2(A^T A) = \\big(\\kappa_2(A)\\big)^2 \\quad \\text{vs.} \\quad H_k = I - 2\\frac{\\mathbf{v}_k\\mathbf{v}_k^T}{\\mathbf{v}_k^T\\mathbf{v}_k}, \\quad v_1 = x_1 + \\operatorname{sign}(x_1)\\|\\mathbf{x}\\|_2$$
           </div>
           <div style="background: #FFFFFF; border: 1px solid rgba(220,38,38,0.2); border-radius: 8px; padding: 6px 11px; font-size: 0.77rem; line-height: 1.42;">
-            • $\kappa_2(A)$: Número de condición (indica qué tanto se amplifican los errores de redondeo en el computador).<br>
-            • $A^T A$: Ecuaciones Normales tradicionales; elevan $\kappa$ al cuadrado, superando la capacidad del procesador ($10^{16}$).<br>
+            • $\\kappa_2(A)$: Número de condición (indica qué tanto se amplifican los errores de redondeo en el computador).<br>
+            • $A^T A$: Ecuaciones Normales tradicionales; elevan $\\kappa$ al cuadrado, superando la capacidad del procesador ($10^{16}$).<br>
             • $H_k$: Transformación de Householder que rota los vectores sin deformarlos, manteniendo el error diminuto.<br>
-            • $\operatorname{sign}(x_1)$: Regla de Wilkinson que evita restar números casi iguales, impidiendo la pérdida de dígitos significativos.
+            • $\\operatorname{sign}(x_1)$: Regla de Wilkinson que evita restar números casi iguales, impidiendo la pérdida de dígitos significativos.
           </div>
           <table class="hud-table" style="margin-top: 6px;">
             <thead>
               <tr>
                 <th>Grado $m$</th>
-                <th>$\kappa_2(A)$ (QR)</th>
-                <th>$\kappa_2(A^T A)$ (LU)</th>
+                <th>$\\kappa_2(A)$ (QR)</th>
+                <th>$\\kappa_2(A^T A)$ (LU)</th>
                 <th>Diferencia entre métodos</th>
                 <th>Diagnóstico</th>
               </tr>
@@ -394,30 +394,30 @@ const WORLD_STOPS = [
             <tbody>
               <tr>
                 <td><strong>$m=1$</strong></td>
-                <td>$1.49 \times 10^1$</td>
-                <td>$2.23 \times 10^2$</td>
-                <td>$2.31 \times 10^{-14}$</td>
+                <td>$1.49 \\times 10^1$</td>
+                <td>$2.23 \\times 10^2$</td>
+                <td>$2.31 \\times 10^{-14}$</td>
                 <td class="text-emerald">Ambos métodos son estables</td>
               </tr>
               <tr>
                 <td><strong>$m=2$</strong></td>
-                <td>$1.87 \times 10^2$</td>
-                <td>$3.48 \times 10^4$</td>
-                <td>$1.94 \times 10^{-11}$</td>
+                <td>$1.87 \\times 10^2$</td>
+                <td>$3.48 \\times 10^4$</td>
+                <td>$1.94 \\times 10^{-11}$</td>
                 <td class="text-emerald">LU empieza a perder dígitos</td>
               </tr>
               <tr>
                 <td><strong>$m=3$</strong></td>
-                <td>$3.06 \times 10^3$</td>
-                <td>$9.39 \times 10^6$</td>
-                <td>$5.05 \times 10^{-8}$</td>
+                <td>$3.06 \\times 10^3$</td>
+                <td>$9.39 \\times 10^6$</td>
+                <td>$5.05 \\times 10^{-8}$</td>
                 <td class="text-amber">LU pierde la mitad de precisión</td>
               </tr>
               <tr class="row-danger">
                 <td><strong>$m=4$</strong></td>
-                <td>$5.36 \times 10^4$</td>
-                <td><strong>$8.79 \times 10^{20}$</strong></td>
-                <td><strong>$4.00 \times 10^2$</strong></td>
+                <td>$5.36 \\times 10^4$</td>
+                <td><strong>$8.79 \\times 10^{20}$</strong></td>
+                <td><strong>$4.00 \\times 10^2$</strong></td>
                 <td class="text-crimson"><strong>Colapso de LU ($> 10^{16}$, basura numérica)</strong></td>
               </tr>
             </tbody>
@@ -457,7 +457,7 @@ const WORLD_STOPS = [
       <div class="copeton-dialog-banner">
         <span style="font-size: 1.6rem;">🎈</span>
         <div>
-          <strong>Capítulo 5 — El Examen con una Función Conocida:</strong> «Antes de aplicar el algoritmo en Bogotá, lo auditamos con la famosa función de <strong>Franke (1979)</strong>, cuya integral exacta conocemos con 15 cifras decimales ($I_{\text{exact}} = 0.404343099291993$). Esto nos permitió comprobar qué tan rápido aprende el método y verificar el estancamiento de error predicho por el paper».
+          <strong>Capítulo 5 — El Examen con una Función Conocida:</strong> «Antes de aplicar el algoritmo en Bogotá, lo auditamos con la famosa función de <strong>Franke (1979)</strong>, cuya integral exacta conocemos con 15 cifras decimales ($I_{\\text{exact}} = 0.404343099291993$). Esto nos permitió comprobar qué tan rápido aprende el método y verificar el estancamiento de error predicho por el paper».
         </div>
       </div>
 
@@ -468,12 +468,12 @@ const WORLD_STOPS = [
             <span class="panel-tag">Auditoría con Franke</span>
           </div>
           <div class="math-box">
-            $$p_k = \frac{\ln(E_{k-1}/E_k)}{\ln(h_{k-1}/h_k)} = \log_2\!\left(\frac{E_{k-1}}{E_k}\right) \quad \text{al dividir cada triángulo en 4}$$
+            $$p_k = \\frac{\\ln(E_{k-1}/E_k)}{\\ln(h_{k-1}/h_k)} = \\log_2\\!\\left(\\frac{E_{k-1}}{E_k}\\right) \\quad \\text{al dividir cada triángulo en 4}$$
           </div>
           <div style="background: #FFFFFF; border: 1px solid rgba(45,106,79,0.2); border-radius: 8px; padding: 6px 11px; font-size: 0.77rem; line-height: 1.42;">
             • $E_k$: Error relativo de la aproximación en el nivel de refinamiento $k$.<br>
             • $h_k$: Tamaño de los triángulos (se reduce a la mitad en cada paso $1:4$).<br>
-            • $p_k$: Orden empírico de convergencia. Un valor de $p_k \approx 5$ significa que cada subdivisión <strong>reduce el error 32 veces</strong>.
+            • $p_k$: Orden empírico de convergencia. Un valor de $p_k \\approx 5$ significa que cada subdivisión <strong>reduce el error 32 veces</strong>.
           </div>
           <table class="hud-table" style="margin-top: 6px;">
             <thead>
@@ -488,30 +488,30 @@ const WORLD_STOPS = [
             <tbody>
               <tr>
                 <td><strong>$k=0$</strong> (28 triáng.)</td>
-                <td>$4.85 \times 10^{-4}$</td>
+                <td>$4.85 \\times 10^{-4}$</td>
                 <td>—</td>
-                <td>$1.296 \times 10^{-2}$</td>
+                <td>$1.296 \\times 10^{-2}$</td>
                 <td>—</td>
               </tr>
               <tr>
                 <td><strong>$k=1$</strong> (112 triáng.)</td>
-                <td>$1.12 \times 10^{-5}$</td>
+                <td>$1.12 \\times 10^{-5}$</td>
                 <td class="text-emerald"><strong>$5.43$ (Excelente)</strong></td>
-                <td>$1.281 \times 10^{-2}$</td>
+                <td>$1.281 \\times 10^{-2}$</td>
                 <td class="text-amber">$0.02$</td>
               </tr>
               <tr>
                 <td><strong>$k=2$</strong> (448 triáng.)</td>
-                <td>$2.14 \times 10^{-7}$</td>
+                <td>$2.14 \\times 10^{-7}$</td>
                 <td class="text-emerald"><strong>$5.71$ (Excelente)</strong></td>
-                <td>$1.279 \times 10^{-2}$</td>
+                <td>$1.279 \\times 10^{-2}$</td>
                 <td class="text-crimson"><strong>$0.00$ (Estancado)</strong></td>
               </tr>
               <tr class="row-highlight">
                 <td><strong>$k=3$</strong> (1792 triáng.)</td>
-                <td>$3.61 \times 10^{-9}$</td>
+                <td>$3.61 \\times 10^{-9}$</td>
                 <td class="text-emerald"><strong>$5.89$ (Casi exacto)</strong></td>
-                <td>$1.279 \times 10^{-2}$</td>
+                <td>$1.279 \\times 10^{-2}$</td>
                 <td class="text-crimson"><strong>$0.00$ (Estancado)</strong></td>
               </tr>
             </tbody>
@@ -530,7 +530,7 @@ const WORLD_STOPS = [
             ${typeof Charts !== 'undefined' ? Charts.getFrankeSVG() : ''}
           </div>
           <p style="font-size: 0.80rem; color: var(--text-muted); line-height: 1.42; margin-top: 4px;">
-            <strong>Qué nos dice esta gráfica:</strong> Cuando tenemos la función exacta (línea azul), el error se desploma hasta una billonésima ($10^{-9}$). Pero cuando solo tenemos los 19 sensores de Bogotá (línea ámbar), el error se aplana en $1.28\%$. ¡Comprobamos en la práctica la predicción teórica del paper!
+            <strong>Qué nos dice esta gráfica:</strong> Cuando tenemos la función exacta (línea azul), el error se desploma hasta una billonésima ($10^{-9}$). Pero cuando solo tenemos los 19 sensores de Bogotá (línea ámbar), el error se aplana en $1.28\\%$. ¡Comprobamos en la práctica la predicción teórica del paper!
           </p>
         </div>
       </div>
@@ -587,7 +587,7 @@ const WORLD_STOPS = [
             <div class="metric-box">
               <div class="metric-label">Sesgo Eliminado en Bogotá</div>
               <div class="metric-value cyan">31.93 vs 33.50</div>
-              <div class="metric-sub">$-4.69\%$ de sobreestimación corregida</div>
+              <div class="metric-sub">$-4.69\\%$ de sobreestimación corregida</div>
             </div>
           </div>
           <table class="hud-table">
@@ -595,27 +595,27 @@ const WORLD_STOPS = [
               <tr>
                 <th>Parámetro Evaluado</th>
                 <th>Rango de Prueba</th>
-                <th>Concentración Media ($\overline{C}_{\Omega}$)</th>
+                <th>Concentración Media ($\\overline{C}_{\\Omega}$)</th>
                 <th>Comportamiento Numérico</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td><strong>Radio de Influencia ($R$)</strong></td>
-                <td>$9.0 \to 18.0\,\text{km}$</td>
-                <td>$31.68 \to 32.19\,\mu\text{g}/\text{m}^3$</td>
-                <td class="text-emerald">Muy estable (variación menor a $1.6\%$)</td>
+                <td>$9.0 \\to 18.0\\,\\text{km}$</td>
+                <td>$31.68 \\to 32.19\\,\\mu\\text{g}/\\text{m}^3$</td>
+                <td class="text-emerald">Muy estable (variación menor a $1.6\\%$)</td>
               </tr>
               <tr class="row-highlight">
-                <td><strong>Tolerancia de Malla ($\tau$)</strong></td>
-                <td>$50 \to 8$ ($28 \to 205$ triángulos)</td>
-                <td>$32.12 \to 31.98\,\mu\text{g}/\text{m}^3$</td>
-                <td class="text-emerald">Converge en menos de $1\,\text{ms}$ en CPU</td>
+                <td><strong>Tolerancia de Malla ($\\tau$)</strong></td>
+                <td>$50 \\to 8$ ($28 \\to 205$ triángulos)</td>
+                <td>$32.12 \\to 31.98\\,\\mu\\text{g}/\\text{m}^3$</td>
+                <td class="text-emerald">Converge en menos de $1\\,\\text{ms}$ en CPU</td>
               </tr>
             </tbody>
           </table>
           <div class="math-box" style="margin-top: 6px;">
-            <strong>Masa Total en Bogotá ($H_{\text{mix}} = 1000\,\text{m}$):</strong> $I_{\Omega} = 8058.59\,\text{g}/\text{m} \implies \mathbf{8.06\,\text{toneladas}}$ de partículas $\text{PM}_{10}$ suspendidas sobre $252.37\,\text{km}^2$.
+            <strong>Masa Total en Bogotá ($H_{\\text{mix}} = 1000\\,\\text{m}$):</strong> $I_{\\Omega} = 8058.59\\,\\text{g}/\\text{m} \\implies \\mathbf{8.06\\,\\text{toneladas}}$ de partículas $\\text{PM}_{10}$ suspendidas sobre $252.37\\,\\text{km}^2$.
           </div>
         </div>
 
@@ -625,7 +625,7 @@ const WORLD_STOPS = [
             <span class="panel-tag cyan">Impacto y Futuro</span>
           </div>
           <ul class="hud-list">
-            <li><strong>1. Álgebra Numérica Impecable:</strong> El método tradicional $LU$ colapsa en el computador ($\kappa = 8.79 \times 10^{20}$); la Factorización $QR$ de Householder con regla de signo de Wilkinson es indispensable para que los cálculos no se deformen.</li>
+            <li><strong>1. Álgebra Numérica Impecable:</strong> El método tradicional $LU$ colapsa en el computador ($\\kappa = 8.79 \\times 10^{20}$); la Factorización $QR$ de Householder con regla de signo de Wilkinson es indispensable para que los cálculos no se deformen.</li>
             <li><strong>2. Eficiencia Quirúrgica:</strong> Mientras que un polinomio simple se integra exactamente con 28 triángulos, el modelo de Shepard detecta la columna de humo industrial en <strong>Carvajal-Kennedy</strong> y enfoca 205 triángulos quirúrgicos solo allí.</li>
             <li><strong>3. Decisión de Inversión Pública:</strong> El fenómeno de <em>Error Stalling</em> demuestra que la alcaldía no necesita supercomputadores para mejorar los diagnósticos, sino instalar más sensores de bajo costo en el suroccidente.</li>
             <li><strong>4. Pasos a Futuro:</strong> (1) Incluir la dirección de los vientos y la barrera montañosa de los Cerros Orientales; (2) Integrar mediciones de sensores ciudadanos; y (3) Extender el motor a integración 3D espacio-tiempo hora a hora $(x,y,t)$.</li>
@@ -665,7 +665,7 @@ const WORLD_STOPS = [
             </div>
             <p style="font-size: 0.82rem; line-height: 1.48;">
               • <strong>Base:</strong> Cavoretto, De Rossi &amp; Erb (2024).<br>
-              • <strong>Aporte:</strong> Conversión a kilómetros reales ($252.37\,\text{km}^2$), cancelación física a gramos/metro y propuesta de valor orientada a decisiones públicas sin sesgo.
+              • <strong>Aporte:</strong> Conversión a kilómetros reales ($252.37\\,\\text{km}^2$), cancelación física a gramos/metro y propuesta de valor orientada a decisiones públicas sin sesgo.
             </p>
           </div>
 
@@ -675,8 +675,8 @@ const WORLD_STOPS = [
               <span class="panel-tag cyan">Fase III</span>
             </div>
             <p style="font-size: 0.82rem; line-height: 1.48;">
-              • <strong>Estabilidad:</strong> Householder QR mantiene la precisión intacta frente al colapso de LU ($\kappa = 8.79 \times 10^{20}$).<br>
-              • <strong>Medición Bogotá:</strong> $8.06\,\text{toneladas}$ de $\text{PM}_{10}$ y concentración insesgada de $31.93\,\mu\text{g}/\text{m}^3$ ($-4.69\%$).
+              • <strong>Estabilidad:</strong> Householder QR mantiene la precisión intacta frente al colapso de LU ($\\kappa = 8.79 \\times 10^{20}$).<br>
+              • <strong>Medición Bogotá:</strong> $8.06\\,\\text{toneladas}$ de $\\text{PM}_{10}$ y concentración insesgada de $31.93\\,\\mu\\text{g}/\\text{m}^3$ ($-4.69\\%$).
             </p>
           </div>
 
